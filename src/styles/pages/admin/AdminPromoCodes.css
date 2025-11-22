@@ -1,0 +1,68 @@
+.admin-promocodes {
+    padding: 1rem;
+}
+
+.codes-table-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+
+.codes-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.codes-table th,
+.codes-table td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.codes-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #666;
+}
+
+.code-badge {
+    background: #f3f4f6;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-family: monospace;
+    font-weight: 600;
+    color: #333;
+    border: 1px dashed #ccc;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.status-badge.active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.inactive {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.code-inactive {
+    opacity: 0.6;
+    background: #fafafa;
+}
+
+.text-center {
+    text-align: center;
+    color: #666;
+    padding: 2rem !important;
+}

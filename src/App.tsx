@@ -23,7 +23,11 @@ import OrderConfirmation from './pages/OrderConfirmation';
 import Wishlist from './pages/Wishlist';
 import Profile from './pages/Profile';
 import AdminRoute from './components/AdminRoute';
+import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminPromoCodes from './pages/admin/AdminPromoCodes';
 
 const AppContent = () => {
   const { user } = useAuth();
@@ -81,7 +85,13 @@ const AppContent = () => {
                     }
                   />
                   <Route element={<AdminRoute />}>
-                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route element={<AdminLayout />}>
+                      <Route path="/admin" element={<AdminDashboard />} />
+                      <Route path="/admin/products" element={<AdminProducts />} />
+                      <Route path="/admin/orders" element={<AdminDashboard />} />
+                      <Route path="/admin/users" element={<AdminUsers />} />
+                      <Route path="/admin/promocodes" element={<AdminPromoCodes />} />
+                    </Route>
                   </Route>
                 </Routes>
               </main>

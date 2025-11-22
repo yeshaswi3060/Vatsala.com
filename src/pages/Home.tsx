@@ -1,11 +1,39 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { collection, getDocs, query, limit, where } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import ProductCard from '../components/ProductCard';
 import Newsletter from '../components/Newsletter';
-import { PRODUCTS } from '../utils/constants';
 import '../styles/pages/Home.css';
 
 const Home = () => {
-    const featuredProducts = PRODUCTS.slice(0, 4);
+    const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchFeaturedProducts = async () => {
+            try {
+                const productsRef = collection(db, 'products');
+                // In a real app, we might have a 'featured' flag or sort by popularity
+                // For now, just fetch the first 4 visible products
+                const q = query(productsRef, limit(10));
+                const querySnapshot = await getDocs(q);
+
+                const products = querySnapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter((p: any) => !p.isHidden)
+                    .slice(0, 4);
+
+                setFeaturedProducts(products);
+            } catch (error) {
+                console.error('Error fetching featured products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFeaturedProducts();
+    }, []);
 
     return (
         <div className="home-page">
@@ -103,11 +131,18 @@ const Home = () => {
                         <h2 className="section-title">Bestselling <span className="gradient-text">Pieces</span></h2>
                     </div>
 
-                    <div className="products-grid">
-                        {featuredProducts.map(product => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
+                    {loading ? (
+                        <div className="loading-spinner">Loading featured products...</div>
+                    ) : (
+                        <div className="products-grid">
+                            {featuredProducts.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                            {featuredProducts.length === 0 && (
+                                <p className="no-products-text">Check back soon for our latest collection!</p>
+                            )}
+                        </div>
+                    )}
 
                     <div className="view-all-cta">
                         <Link to="/shop" className="btn btn-gold">View All Products</Link>

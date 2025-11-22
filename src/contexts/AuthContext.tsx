@@ -9,7 +9,8 @@ import {
     signInWithPopup,
     type User as FirebaseUser
 } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { auth, db } from '../config/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 interface User {
     id: string;
@@ -86,6 +87,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 isAdmin: email === ADMIN_EMAIL
             };
 
+            // Save user to Firestore
+            await setDoc(doc(db, 'users', newUser.id), {
+                ...newUser,
+                createdAt: new Date().toISOString(),
+                lastLogin: new Date().toISOString()
+            });
+
             setUser(newUser);
             return newUser;
         } catch (error: any) {
@@ -104,6 +112,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 email: userCredential.user.email || '',
                 isAdmin: userCredential.user.email === ADMIN_EMAIL
             };
+
+            // Update last login
+            await setDoc(doc(db, 'users', loggedInUser.id), {
+                ...loggedInUser,
+                lastLogin: new Date().toISOString()
+            }, { merge: true });
 
             setUser(loggedInUser);
             return loggedInUser;
@@ -125,6 +139,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 email: email,
                 isAdmin: email === ADMIN_EMAIL
             };
+
+            // Save/Update user in Firestore
+            await setDoc(doc(db, 'users', loggedInUser.id), {
+                ...loggedInUser,
+                lastLogin: new Date().toISOString()
+            }, { merge: true });
 
             setUser(loggedInUser);
             return loggedInUser;

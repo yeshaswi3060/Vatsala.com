@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import ProductCard from '../components/ProductCard';
-import { PRODUCTS, CATEGORIES } from '../utils/constants';
+import { CATEGORIES } from '../utils/constants';
 import '../styles/pages/Shop.css';
 
 const Shop = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'All');
     const [sortBy, setSortBy] = useState('featured');
+    const [products, setProducts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const category = searchParams.get('category');
@@ -15,6 +19,32 @@ const Shop = () => {
             setSelectedCategory(category);
         }
     }, [searchParams]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            setLoading(true);
+            try {
+                const productsRef = collection(db, 'products');
+                // Fetch all products initially, filter client-side for smoother category switching
+                // In a larger app, we would query by category server-side
+                const querySnapshot = await getDocs(productsRef);
+                const productsData = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                // Filter out hidden products
+                const visibleProducts = productsData.filter((p: any) => !p.isHidden);
+                setProducts(visibleProducts);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     const handleCategoryChange = (category: string) => {
         setSelectedCategory(category);
@@ -27,8 +57,8 @@ const Shop = () => {
     };
 
     const filteredProducts = selectedCategory === 'All'
-        ? PRODUCTS
-        : PRODUCTS.filter(p => p.category === selectedCategory);
+        ? products
+        : products.filter(p => p.category === selectedCategory);
 
     const sortedProducts = [...filteredProducts].sort((a, b) => {
         if (sortBy === 'price-low') return a.price - b.price;
@@ -36,6 +66,22 @@ const Shop = () => {
         if (sortBy === 'name') return a.name.localeCompare(b.name);
         return 0; // featured
     });
+
+    if (loading) {
+        return (
+            <div className="shop-page">
+                <div className="shop-hero">
+                    <div className="container">
+                        <h1>Shop Traditional Wear</h1>
+                        <p>Discover our complete collection of authentic Indian clothing</p>
+                    </div>
+                </div>
+                <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
+                    <div className="loading-spinner">Loading products...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="shop-page">

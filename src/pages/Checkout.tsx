@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -16,40 +16,68 @@ const Checkout = () => {
     const { showToast } = useToast();
     const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        fullName: user?.name || '',
-        email: user?.email || '',
-        phone: '',
-        address: '',
-        city: '',
-        state: '',
-        pincode: '',
-        paymentMethod: 'cod'
-    });
+    const [promoCode, setPromoCode] = useState('');
+    const [discount, setDiscount] = useState<{ type: string; value: number; code: string } | null>(null);
+    const [promoLoading, setPromoLoading] = useState(false);
 
-    // Load saved shipping info on mount
-    useState(() => {
-        const savedShipping = getShippingInfo();
-        if (savedShipping) {
-            setFormData(prev => ({
-                ...prev,
-                fullName: savedShipping.fullName,
-                phone: savedShipping.phone,
-                address: savedShipping.address,
-                city: savedShipping.city,
-                state: savedShipping.state,
-                pincode: savedShipping.pincode
-            }));
-            showToast('Shipping information loaded from your profile', 'info');
+    // ... (existing useEffect)
+
+    const handleApplyPromo = async () => {
+        if (!promoCode.trim()) {
+            showToast('Please enter a promo code', 'error');
+            return;
         }
-    });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        setPromoLoading(true);
+        try {
+            const q = query(
+                collection(db, 'promoCodes'),
+                where('code', '==', promoCode.toUpperCase()),
+                where('isActive', '==', true)
+            );
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                showToast('Invalid promo code', 'error');
+                setDiscount(null);
+            } else {
+                const promoData = querySnapshot.docs[0].data();
+                const expiryDate = new Date(promoData.expiryDate);
+
+                if (expiryDate < new Date()) {
+                    showToast('Promo code has expired', 'error');
+                    setDiscount(null);
+                } else {
+                    setDiscount({
+                        type: promoData.discountType,
+                        value: promoData.discountValue,
+                        code: promoData.code
+                    });
+                    showToast('Promo code applied successfully!', 'success');
+                }
+            }
+        } catch (error) {
+            console.error('Error applying promo code:', error);
+            showToast('Failed to apply promo code', 'error');
+        } finally {
+            setPromoLoading(false);
+        }
     };
+
+    const calculateTotal = () => {
+        if (!discount) return total;
+
+        let discountAmount = 0;
+        if (discount.type === 'percentage') {
+            discountAmount = (total * discount.value) / 100;
+        } else {
+            discountAmount = discount.value;
+        }
+
+        return Math.max(0, total - discountAmount);
+    };
+
+    const finalTotal = calculateTotal();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -75,7 +103,12 @@ const Checkout = () => {
             const orderData = {
                 userId: user.id,
                 items: items,
-                total: total,
+                subtotal: total,
+                discount: discount ? {
+                    code: discount.code,
+                    amount: total - finalTotal
+                } : null,
+                total: finalTotal,
                 shippingAddress: {
                     fullName: formData.fullName,
                     email: formData.email,
@@ -105,19 +138,7 @@ const Checkout = () => {
         }
     };
 
-    if (items.length === 0) {
-        return (
-            <div className="checkout-page">
-                <div className="container">
-                    <div className="empty-cart">
-                        <h1>Your cart is empty</h1>
-                        <p>Add some items to your cart before checking out</p>
-                        <a href="/shop" className="btn btn-primary">Continue Shopping</a>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    // ... (existing render logic)
 
     return (
         <div className="checkout-page">
@@ -125,10 +146,12 @@ const Checkout = () => {
                 <h1 className="page-title">Checkout</h1>
 
                 <div className="checkout-content">
+                    {/* ... (existing form) ... */}
                     <form onSubmit={handleSubmit} className="checkout-form">
+                        {/* ... (existing form fields) ... */}
                         <div className="form-section">
                             <h2>Shipping Information</h2>
-
+                            {/* ... (shipping fields) ... */}
                             <div className="form-row">
                                 <div className="form-group">
                                     <label htmlFor="fullName">Full Name *</label>
@@ -224,7 +247,6 @@ const Checkout = () => {
 
                         <div className="form-section">
                             <h2>Payment Method</h2>
-
                             <div className="payment-options">
                                 <label className="payment-option">
                                     <input
@@ -272,11 +294,55 @@ const Checkout = () => {
                             ))}
                         </div>
 
+                        <div className="promo-code-section">
+                            <div className="promo-input-group">
+                                <input
+                                    type="text"
+                                    placeholder="Promo Code"
+                                    value={promoCode}
+                                    onChange={(e) => setPromoCode(e.target.value)}
+                                    disabled={!!discount}
+                                />
+                                {discount ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setDiscount(null);
+                                            setPromoCode('');
+                                        }}
+                                        className="btn-remove-promo"
+                                    >
+                                        Remove
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={handleApplyPromo}
+                                        disabled={promoLoading || !promoCode}
+                                        className="btn-apply-promo"
+                                    >
+                                        {promoLoading ? '...' : 'Apply'}
+                                    </button>
+                                )}
+                            </div>
+                            {discount && (
+                                <p className="promo-success-msg">
+                                    Code <strong>{discount.code}</strong> applied!
+                                </p>
+                            )}
+                        </div>
+
                         <div className="summary-totals">
                             <div className="summary-row">
                                 <span>Subtotal</span>
                                 <span>{formatPrice(total)}</span>
                             </div>
+                            {discount && (
+                                <div className="summary-row discount-row">
+                                    <span>Discount</span>
+                                    <span>-{formatPrice(total - finalTotal)}</span>
+                                </div>
+                            )}
                             <div className="summary-row">
                                 <span>Shipping</span>
                                 <span className="free-shipping">FREE</span>
@@ -284,7 +350,7 @@ const Checkout = () => {
                             <div className="summary-divider"></div>
                             <div className="summary-row summary-total">
                                 <span>Total</span>
-                                <span>{formatPrice(total)}</span>
+                                <span>{formatPrice(finalTotal)}</span>
                             </div>
                         </div>
                     </div>
