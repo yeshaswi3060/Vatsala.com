@@ -21,10 +21,14 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const success = await login(email, password);
+            const user = await login(email, password);
 
-            if (success) {
-                navigate(from, { replace: true });
+            if (user) {
+                if (user.isAdmin) {
+                    navigate('/admin');
+                } else {
+                    navigate(from, { replace: true });
+                }
             } else {
                 setError('Invalid email or password. Please try again.');
             }
@@ -40,8 +44,12 @@ const Login = () => {
         setLoading(true);
 
         try {
-            await loginWithGoogle();
-            navigate(from, { replace: true });
+            const user = await loginWithGoogle();
+            if (user?.isAdmin) {
+                navigate('/admin');
+            } else {
+                navigate(from, { replace: true });
+            }
         } catch (err: any) {
             console.error('Google sign-in error:', err);
             if (err.code === 'auth/popup-closed-by-user') {

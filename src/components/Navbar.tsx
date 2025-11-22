@@ -63,6 +63,11 @@ const Navbar = () => {
                                 </button>
                                 {showUserMenu && (
                                     <div className="user-menu-dropdown">
+                                        {user?.isAdmin && (
+                                            <Link to="/admin" onClick={() => setShowUserMenu(false)} className="admin-link">
+                                                Admin Dashboard
+                                            </Link>
+                                        )}
                                         <Link to="/profile" onClick={() => setShowUserMenu(false)}>My Profile</Link>
                                         <Link to="/wishlist" onClick={() => setShowUserMenu(false)}>My Wishlist</Link>
                                         <Link to="/orders" onClick={() => setShowUserMenu(false)}>My Orders</Link>

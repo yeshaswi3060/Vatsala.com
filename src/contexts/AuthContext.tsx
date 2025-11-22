@@ -22,9 +22,9 @@ interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
     isAdmin: boolean;
-    login: (email: string, password: string) => Promise<boolean>;
-    loginWithGoogle: () => Promise<boolean>;
-    signup: (name: string, email: string, password: string) => Promise<boolean>;
+    login: (email: string, password: string) => Promise<User | null>;
+    loginWithGoogle: () => Promise<User | null>;
+    signup: (name: string, email: string, password: string) => Promise<User | null>;
     logout: () => void;
     loading: boolean;
 }
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return unsubscribe;
     }, []);
 
-    const signup = async (name: string, email: string, password: string): Promise<boolean> => {
+    const signup = async (name: string, email: string, password: string): Promise<User | null> => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
@@ -79,52 +79,55 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 displayName: name
             });
 
-            setUser({
+            const newUser = {
                 id: userCredential.user.uid,
                 name: name,
                 email: userCredential.user.email || '',
                 isAdmin: email === ADMIN_EMAIL
-            });
+            };
 
-            return true;
+            setUser(newUser);
+            return newUser;
         } catch (error: any) {
             console.error('Signup error:', error);
-            return false;
+            return null;
         }
     };
 
-    const login = async (email: string, password: string): Promise<boolean> => {
+    const login = async (email: string, password: string): Promise<User | null> => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-            setUser({
+            const loggedInUser = {
                 id: userCredential.user.uid,
                 name: userCredential.user.displayName || 'User',
                 email: userCredential.user.email || '',
                 isAdmin: userCredential.user.email === ADMIN_EMAIL
-            });
+            };
 
-            return true;
+            setUser(loggedInUser);
+            return loggedInUser;
         } catch (error: any) {
             console.error('Login error:', error);
-            return false;
+            return null;
         }
     };
 
-    const loginWithGoogle = async (): Promise<boolean> => {
+    const loginWithGoogle = async (): Promise<User | null> => {
         try {
             const provider = new GoogleAuthProvider();
             const userCredential = await signInWithPopup(auth, provider);
             const email = userCredential.user.email || '';
 
-            setUser({
+            const loggedInUser = {
                 id: userCredential.user.uid,
                 name: userCredential.user.displayName || 'User',
                 email: email,
                 isAdmin: email === ADMIN_EMAIL
-            });
+            };
 
-            return true;
+            setUser(loggedInUser);
+            return loggedInUser;
         } catch (error: any) {
             console.error('Google login error details:', {
                 code: error.code,
