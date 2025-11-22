@@ -1,3 +1,4 @@
+```typescript
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -31,12 +32,16 @@ const Signup = () => {
 
         setLoading(true);
 
-        const success = await signup(name, email, password);
+        try {
+            const success = await signup(name, email, password);
 
-        if (success) {
-            navigate('/');
-        } else {
-            setError('Email already exists');
+            if (success) {
+                navigate('/');
+            } else {
+                setError('Failed to create account. Email may already be in use.');
+            }
+        } catch (err) {
+            setError('An error occurred. Please try again.');
         }
 
         setLoading(false);
@@ -115,3 +120,4 @@ const Signup = () => {
 };
 
 export default Signup;
+```

@@ -20,12 +20,16 @@ const Login = () => {
         setError('');
         setLoading(true);
 
-        const success = await login(email, password);
+        try {
+            const success = await login(email, password);
 
-        if (success) {
-            navigate(from, { replace: true });
-        } else {
-            setError('Invalid email or password');
+            if (success) {
+                navigate(from, { replace: true });
+            } else {
+                setError('Invalid email or password. Please try again.');
+            }
+        } catch (err) {
+            setError('An error occurred. Please try again.');
         }
 
         setLoading(false);
