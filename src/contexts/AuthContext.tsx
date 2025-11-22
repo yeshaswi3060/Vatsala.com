@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 message: error.message,
                 fullError: error
             });
-            return false;
+            throw error; // Throw error to be handled by component
         }
     };
 

@@ -40,15 +40,17 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const success = await loginWithGoogle();
-
-            if (success) {
-                navigate(from, { replace: true });
+            await loginWithGoogle();
+            navigate(from, { replace: true });
+        } catch (err: any) {
+            console.error('Google sign-in error:', err);
+            if (err.code === 'auth/popup-closed-by-user') {
+                setError('Sign-in cancelled.');
+            } else if (err.code === 'auth/unauthorized-domain') {
+                setError('Domain not authorized. Please add this domain in Firebase Console.');
             } else {
-                setError('Google sign-in failed. Please try again.');
+                setError(err.message || 'Google sign-in failed. Please try again.');
             }
-        } catch (err) {
-            setError('An error occurred. Please try again.');
         }
 
         setLoading(false);
