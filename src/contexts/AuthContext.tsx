@@ -1,4 +1,20 @@
-email: string;
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    updateProfile,
+    GoogleAuthProvider,
+    signInWithPopup,
+    type User as FirebaseUser
+} from 'firebase/auth';
+import { auth } from '../config/firebase';
+
+interface User {
+    id: string;
+    name: string;
+    email: string;
 }
 
 interface AuthContextType {
