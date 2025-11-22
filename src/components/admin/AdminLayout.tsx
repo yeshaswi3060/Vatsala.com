@@ -70,6 +70,14 @@ const AdminLayout = () => {
                         <span className="icon">🏷️</span>
                         Promo Codes
                     </Link>
+                    <div className="nav-divider" style={{ margin: '1rem 0', borderTop: '1px solid #eee' }}></div>
+                    <Link
+                        to="/"
+                        className="nav-item"
+                    >
+                        <span className="icon">🏠</span>
+                        Back to Home
+                    </Link>
                 </nav>
 
                 <div className="sidebar-footer">
