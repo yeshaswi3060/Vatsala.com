@@ -115,7 +115,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
             return true;
         } catch (error: any) {
-            console.error('Google login error:', error);
+            console.error('Google login error details:', {
+                code: error.code,
+                message: error.message,
+                fullError: error
+            });
             return false;
         }
     };

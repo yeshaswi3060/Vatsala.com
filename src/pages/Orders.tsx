@@ -1,19 +1,67 @@
+import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { formatPrice } from '../utils/constants';
 import { Link } from 'react-router-dom';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import '../styles/pages/Orders.css';
 
 const Orders = () => {
     const { user } = useAuth();
+    const [orders, setOrders] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    // Get orders from localStorage
-    const ordersData = localStorage.getItem('vatsala_orders');
-    const allOrders = ordersData ? JSON.parse(ordersData) : [];
+    useEffect(() => {
+        const fetchOrders = async () => {
+            if (!user?.id) {
+                setLoading(false);
+                return;
+            }
 
-    // Filter orders for current user
-    const userOrders = allOrders.filter((order: any) => order.userId === user?.id);
+            try {
+                const ordersRef = collection(db, 'orders');
+                const q = query(
+                    ordersRef,
+                    where('userId', '==', user.id)
+                );
 
-    if (userOrders.length === 0) {
+                const querySnapshot = await getDocs(q);
+                const fetchedOrders = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                // Sort by date manually since we might need an index for compound queries
+                fetchedOrders.sort((a: any, b: any) => {
+                    const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.date || 0);
+                    const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.date || 0);
+                    return dateB - dateA;
+                });
+
+                setOrders(fetchedOrders);
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, [user]);
+
+    if (loading) {
+        return (
+            <div className="orders-page">
+                <div className="container">
+                    <div className="loading-orders">
+                        <p>Loading your orders...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (orders.length === 0) {
         return (
             <div className="orders-page">
                 <div className="container">
@@ -35,10 +83,10 @@ const Orders = () => {
         <div className="orders-page">
             <div className="container">
                 <h1 className="page-title">My Orders</h1>
-                <p className="orders-count">{userOrders.length} {userOrders.length === 1 ? 'order' : 'orders'}</p>
+                <p className="orders-count">{orders.length} {orders.length === 1 ? 'order' : 'orders'}</p>
 
                 <div className="orders-list">
-                    {userOrders.reverse().map((order: any) => (
+                    {orders.map((order) => (
                         <div key={order.id} className="order-card">
                             <div className="order-header">
                                 <div className="order-id">
@@ -46,18 +94,20 @@ const Orders = () => {
                                     <span className="order-number">{order.id}</span>
                                 </div>
                                 <div className="order-date">
-                                    {new Date(order.date).toLocaleDateString('en-IN', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric'
-                                    })}
+                                    {order.createdAt?.toDate ?
+                                        order.createdAt.toDate().toLocaleDateString('en-IN', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric'
+                                        }) :
+                                        new Date().toLocaleDateString('en-IN')
+                                    }
                                 </div>
                             </div>
 
                             <div className="order-items">
                                 {order.items.map((item: any) => (
                                     <div key={item.id} className="order-item">
-                                        <img src={item.product.image} alt={item.product.name} />
                                         <div className="order-item-details">
                                             <p className="order-item-name">{item.product.name}</p>
                                             <p className="order-item-options">
