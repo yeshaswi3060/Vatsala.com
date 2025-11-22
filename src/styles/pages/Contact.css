@@ -1,0 +1,187 @@
+/* Contact Page Styles */
+
+.contact-page {
+    min-height: 100vh;
+    padding-top: 80px;
+}
+
+.contact-hero {
+    background: linear-gradient(135deg, #8B008B 0%, #FF1493 50%, #FFD700 100%);
+    padding: var(--spacing-2xl) 0;
+    text-align: center;
+    color: white;
+}
+
+.contact-hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: var(--spacing-sm);
+    color: white;
+}
+
+.contact-hero p {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.contact-content {
+    background: var(--color-bg-dark);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: var(--spacing-2xl);
+}
+
+.contact-info h2 {
+    margin-bottom: var(--spacing-md);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.contact-info>p {
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.125rem;
+    line-height: 1.7;
+}
+
+.contact-details {
+    margin-bottom: var(--spacing-xl);
+}
+
+.contact-item {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--color-bg-light);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all var(--transition-fast);
+}
+
+.contact-item:hover {
+    border-color: rgba(255, 105, 180, 0.3);
+    transform: translateX(5px);
+}
+
+.contact-icon {
+    font-size: 2rem;
+    min-width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-item h3 {
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-text-primary);
+}
+
+.contact-item p {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.social-section h3 {
+    margin-bottom: var(--spacing-md);
+    background: linear-gradient(135deg, #FFD700 0%, #FF69B4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.social-links-contact {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.social-links-contact .social-link {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #FFD700 0%, #FF69B4 100%);
+    color: var(--color-bg-dark);
+    text-decoration: none;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    transition: all var(--transition-fast);
+}
+
+.social-links-contact .social-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
+}
+
+.contact-form-section h2 {
+    margin-bottom: var(--spacing-lg);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.contact-form {
+    background: var(--color-bg-light);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-bg-medium);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-md);
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #FF69B4;
+    background: var(--color-bg-dark);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.form-success {
+    background: linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+.form-success h3 {
+    color: var(--color-bg-dark);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.5rem;
+}
+
+.form-success p {
+    color: var(--color-bg-dark);
+    font-size: 1.125rem;
+}
+
+@media (max-width: 1024px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+}

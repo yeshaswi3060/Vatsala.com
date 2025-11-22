@@ -1,0 +1,126 @@
+/* Shop Page Styles */
+
+.shop-page {
+    min-height: 100vh;
+    padding-top: 80px;
+}
+
+.shop-hero {
+    background: linear-gradient(135deg, #8B008B 0%, #FF1493 50%, #FFD700 100%);
+    padding: var(--spacing-2xl) 0;
+    text-align: center;
+    color: white;
+}
+
+.shop-hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: var(--spacing-sm);
+    color: white;
+}
+
+.shop-hero p {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.shop-content {
+    background: var(--color-bg-dark);
+}
+
+.shop-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.category-filters {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-bg-light);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-full);
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.category-btn:hover {
+    border-color: #FF69B4;
+    color: var(--color-text-primary);
+}
+
+.category-btn.active {
+    background: linear-gradient(135deg, #FFD700 0%, #FF69B4 100%);
+    border-color: transparent;
+    color: var(--color-bg-dark);
+}
+
+.sort-control {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.sort-control label {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.sort-select {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-bg-light);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-md);
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #FF69B4;
+}
+
+.products-count {
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-md);
+    font-size: 0.95rem;
+}
+
+.no-products {
+    text-align: center;
+    padding: var(--spacing-2xl) 0;
+}
+
+.no-products p {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+    .shop-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .category-filters {
+        justify-content: center;
+    }
+
+    .sort-control {
+        justify-content: space-between;
+    }
+}
