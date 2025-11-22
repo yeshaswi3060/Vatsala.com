@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -9,7 +9,6 @@ import '../styles/pages/ProductDetail.css';
 
 const ProductDetail = () => {
     const { id } = useParams();
-    const navigate = useNavigate();
     const { addToCart } = useCart();
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const { showToast } = useToast();

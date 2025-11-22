@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useProfile } from '../contexts/ProfileContext';
@@ -26,7 +28,7 @@ const Checkout = () => {
     });
 
     // Load saved shipping info on mount
-    useEffect(() => {
+    useState(() => {
         const savedShipping = getShippingInfo();
         if (savedShipping) {
             setFormData(prev => ({
@@ -40,7 +42,7 @@ const Checkout = () => {
             }));
             showToast('Shipping information loaded from your profile', 'info');
         }
-    }, []);
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setFormData({
@@ -49,50 +51,58 @@ const Checkout = () => {
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Save shipping info to profile for future use
-        saveShippingInfo({
-            fullName: formData.fullName,
-            address: formData.address,
-            city: formData.city,
-            state: formData.state,
-            pincode: formData.pincode,
-            phone: formData.phone
-        });
+        if (!user) {
+            showToast('Please login to place an order', 'error');
+            navigate('/login');
+            return;
+        }
 
-        // Create order
-        const order = {
-            id: `ORD${Date.now()}`,
-            userId: user?.id,
-            items: items,
-            total: total,
-            shippingAddress: {
+        try {
+            // Save shipping info to profile
+            await saveShippingInfo({
                 fullName: formData.fullName,
-                email: formData.email,
-                phone: formData.phone,
                 address: formData.address,
                 city: formData.city,
                 state: formData.state,
-                pincode: formData.pincode
-            },
-            paymentMethod: formData.paymentMethod,
-            status: 'pending',
-            date: new Date().toISOString()
-        };
+                pincode: formData.pincode,
+                phone: formData.phone
+            });
 
-        // Save order to localStorage
-        const ordersData = localStorage.getItem('vatsala_orders');
-        const orders = ordersData ? JSON.parse(ordersData) : [];
-        orders.push(order);
-        localStorage.setItem('vatsala_orders', JSON.stringify(orders));
+            // Create order in Firestore
+            const orderData = {
+                userId: user.id,
+                items: items,
+                total: total,
+                shippingAddress: {
+                    fullName: formData.fullName,
+                    email: formData.email,
+                    phone: formData.phone,
+                    address: formData.address,
+                    city: formData.city,
+                    state: formData.state,
+                    pincode: formData.pincode
+                },
+                paymentMethod: formData.paymentMethod,
+                status: 'pending',
+                createdAt: serverTimestamp()
+            };
 
-        // Clear cart
-        clearCart();
+            const docRef = await addDoc(collection(db, 'orders'), orderData);
 
-        // Navigate to order confirmation with order ID
-        navigate(`/order-confirmation/${order.id}`);
+            // Clear cart
+            await clearCart();
+
+            showToast('Order placed successfully!', 'success');
+
+            // Navigate to order confirmation
+            navigate(`/order-confirmation/${docRef.id}`);
+        } catch (error) {
+            console.error('Error placing order:', error);
+            showToast('Failed to place order. Please try again.', 'error');
+        }
     };
 
     if (items.length === 0) {

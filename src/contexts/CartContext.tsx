@@ -1,5 +1,7 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Product } from '../utils/constants';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { doc, setDoc, onSnapshot } from 'firebase/firestore';
+import { db } from '../config/firebase';
+import type { Product } from '../utils/constants';
 
 interface CartItem {
     id: string;
@@ -31,61 +33,89 @@ export const useCart = () => {
 
 interface CartProviderProps {
     children: ReactNode;
+    userId: string | null;
 }
 
-export const CartProvider = ({ children }: CartProviderProps) => {
+export const CartProvider = ({ children, userId }: CartProviderProps) => {
     const [items, setItems] = useState<CartItem[]>([]);
 
-    // Load cart from localStorage on mount
+    // Sync cart with Firestore when user changes
     useEffect(() => {
-        const savedCart = localStorage.getItem('vatsala_cart');
-        if (savedCart) {
-            setItems(JSON.parse(savedCart));
-        }
-    }, []);
-
-    // Save cart to localStorage whenever it changes
-    useEffect(() => {
-        localStorage.setItem('vatsala_cart', JSON.stringify(items));
-    }, [items]);
-
-    const addToCart = (product: Product, size: string, color: string, quantity: number) => {
-        const itemId = `${product.id}-${size}-${color}`;
-
-        setItems(prevItems => {
-            const existingItem = prevItems.find(item => item.id === itemId);
-
-            if (existingItem) {
-                return prevItems.map(item =>
-                    item.id === itemId
-                        ? { ...item, quantity: item.quantity + quantity }
-                        : item
-                );
+        if (!userId) {
+            // Load from localStorage for guest users
+            const savedCart = localStorage.getItem('vatsala_cart');
+            if (savedCart) {
+                setItems(JSON.parse(savedCart));
+            } else {
+                setItems([]);
             }
-
-            return [...prevItems, { id: itemId, product, size, color, quantity }];
-        });
-    };
-
-    const removeFromCart = (itemId: string) => {
-        setItems(prevItems => prevItems.filter(item => item.id !== itemId));
-    };
-
-    const updateQuantity = (itemId: string, quantity: number) => {
-        if (quantity <= 0) {
-            removeFromCart(itemId);
             return;
         }
 
-        setItems(prevItems =>
-            prevItems.map(item =>
-                item.id === itemId ? { ...item, quantity } : item
-            )
-        );
+        // Real-time sync with Firestore for logged-in users
+        const cartRef = doc(db, 'carts', userId);
+
+        const unsubscribe = onSnapshot(cartRef, (docSnap) => {
+            if (docSnap.exists()) {
+                setItems(docSnap.data().items || []);
+            } else {
+                setItems([]);
+            }
+        });
+
+        return () => unsubscribe();
+    }, [userId]);
+
+    // Save cart to Firestore or localStorage
+    const saveCart = async (newItems: CartItem[]) => {
+        if (userId) {
+            // Save to Firestore for logged-in users
+            const cartRef = doc(db, 'carts', userId);
+            await setDoc(cartRef, { items: newItems, updatedAt: new Date() });
+        } else {
+            // Save to localStorage for guest users
+            localStorage.setItem('vatsala_cart', JSON.stringify(newItems));
+        }
     };
 
-    const clearCart = () => {
+    const addToCart = async (product: Product, size: string, color: string, quantity: number) => {
+        const itemId = `${product.id}-${size}-${color}`;
+
+        const newItems = [...items];
+        const existingItem = newItems.find(item => item.id === itemId);
+
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            newItems.push({ id: itemId, product, size, color, quantity });
+        }
+
+        setItems(newItems);
+        await saveCart(newItems);
+    };
+
+    const removeFromCart = async (itemId: string) => {
+        const newItems = items.filter(item => item.id !== itemId);
+        setItems(newItems);
+        await saveCart(newItems);
+    };
+
+    const updateQuantity = async (itemId: string, quantity: number) => {
+        if (quantity <= 0) {
+            await removeFromCart(itemId);
+            return;
+        }
+
+        const newItems = items.map(item =>
+            item.id === itemId ? { ...item, quantity } : item
+        );
+        setItems(newItems);
+        await saveCart(newItems);
+    };
+
+    const clearCart = async () => {
         setItems([]);
+        await saveCart([]);
     };
 
     const itemCount = items.reduce((total, item) => total + item.quantity, 0);

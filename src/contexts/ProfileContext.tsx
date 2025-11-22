@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { doc, setDoc, onSnapshot } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 interface ShippingInfo {
     fullName: string;
@@ -41,37 +43,43 @@ interface ProfileProviderProps {
 export const ProfileProvider = ({ children, userId }: ProfileProviderProps) => {
     const [profile, setProfile] = useState<UserProfile | null>(null);
 
-    // Load profile from localStorage when userId changes
+    // Sync profile with Firestore
     useEffect(() => {
-        if (userId) {
-            const savedProfile = localStorage.getItem(`vatsala_profile_${userId}`);
-            if (savedProfile) {
-                setProfile(JSON.parse(savedProfile));
-            }
-        } else {
+        if (!userId) {
             setProfile(null);
+            return;
         }
+
+        // Real-time sync with Firestore
+        const profileRef = doc(db, 'profiles', userId);
+
+        const unsubscribe = onSnapshot(profileRef, (docSnap) => {
+            if (docSnap.exists()) {
+                setProfile(docSnap.data() as UserProfile);
+            }
+        });
+
+        return () => unsubscribe();
     }, [userId]);
 
-    // Save profile to localStorage whenever it changes
-    useEffect(() => {
-        if (profile && userId) {
-            localStorage.setItem(`vatsala_profile_${userId}`, JSON.stringify(profile));
-        }
-    }, [profile, userId]);
+    const updateProfile = async (updates: Partial<UserProfile>) => {
+        if (!userId) return;
 
-    const updateProfile = (updates: Partial<UserProfile>) => {
-        setProfile(prev => {
-            if (!prev) return null;
-            return { ...prev, ...updates };
-        });
+        const newProfile = { ...profile, ...updates } as UserProfile;
+        setProfile(newProfile);
+
+        const profileRef = doc(db, 'profiles', userId);
+        await setDoc(profileRef, { ...newProfile, updatedAt: new Date() }, { merge: true });
     };
 
-    const saveShippingInfo = (info: ShippingInfo) => {
-        setProfile(prev => {
-            if (!prev) return null;
-            return { ...prev, shippingInfo: info };
-        });
+    const saveShippingInfo = async (info: ShippingInfo) => {
+        if (!userId) return;
+
+        const newProfile = { ...profile, shippingInfo: info } as UserProfile;
+        setProfile(newProfile);
+
+        const profileRef = doc(db, 'profiles', userId);
+        await setDoc(profileRef, { shippingInfo: info, updatedAt: new Date() }, { merge: true });
     };
 
     const getShippingInfo = () => {

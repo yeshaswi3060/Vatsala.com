@@ -1,21 +1,47 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import { formatPrice } from '../utils/constants';
 import '../styles/pages/OrderConfirmation.css';
 
 const OrderConfirmation = () => {
     const { orderId } = useParams();
     const [order, setOrder] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Load order from localStorage
-        const ordersData = localStorage.getItem('vatsala_orders');
-        if (ordersData) {
-            const orders = JSON.parse(ordersData);
-            const foundOrder = orders.find((o: any) => o.id === orderId);
-            setOrder(foundOrder);
-        }
+        const loadOrder = async () => {
+            if (!orderId) return;
+
+            try {
+                const orderRef = doc(db, 'orders', orderId);
+                const orderSnap = await getDoc(orderRef);
+
+                if (orderSnap.exists()) {
+                    setOrder({ id: orderSnap.id, ...orderSnap.data() });
+                }
+            } catch (error) {
+                console.error('Error loading order:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadOrder();
     }, [orderId]);
+
+    if (loading) {
+        return (
+            <div className="order-confirmation-page">
+                <div className="container">
+                    <div className="confirmation-card">
+                        <p>Loading order...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (!order) {
         return (

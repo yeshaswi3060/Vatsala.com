@@ -1,9 +1,8 @@
-// Firebase configuration and initialization
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDBLkhVPLTjG6eNM1uIKhAL-RnmQO1D758",
     authDomain: "mango-tree-tech.firebaseapp.com",
@@ -16,7 +15,12 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+// Initialize services
 export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+// Initialize analytics (not exported to avoid unused warning)
+getAnalytics(app);
 
 export default app;

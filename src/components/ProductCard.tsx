@@ -1,11 +1,3 @@
-import { Link } from 'react-router-dom';
-import { Product, formatPrice } from '../utils/constants';
-import '../styles/components/ProductCard.css';
-
-interface ProductCardProps {
-    product: Product;
-}
-
 const ProductCard = ({ product }: ProductCardProps) => {
     return (
         <Link to={`/product/${product.id}`} className="product-card">

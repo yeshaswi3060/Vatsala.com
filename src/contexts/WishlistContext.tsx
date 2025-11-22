@@ -1,5 +1,7 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Product } from '../utils/constants';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { doc, setDoc, onSnapshot } from 'firebase/firestore';
+import { db } from '../config/firebase';
+import type { Product } from '../utils/constants';
 
 interface WishlistContextType {
     wishlist: Product[];
@@ -20,35 +22,62 @@ export const useWishlist = () => {
 
 interface WishlistProviderProps {
     children: ReactNode;
+    userId: string | null;
 }
 
-export const WishlistProvider = ({ children }: WishlistProviderProps) => {
+export const WishlistProvider = ({ children, userId }: WishlistProviderProps) => {
     const [wishlist, setWishlist] = useState<Product[]>([]);
 
-    // Load wishlist from localStorage on mount
+    // Sync wishlist with Firestore
     useEffect(() => {
-        const savedWishlist = localStorage.getItem('vatsala_wishlist');
-        if (savedWishlist) {
-            setWishlist(JSON.parse(savedWishlist));
-        }
-    }, []);
-
-    // Save wishlist to localStorage whenever it changes
-    useEffect(() => {
-        localStorage.setItem('vatsala_wishlist', JSON.stringify(wishlist));
-    }, [wishlist]);
-
-    const addToWishlist = (product: Product) => {
-        setWishlist(prev => {
-            if (prev.find(p => p.id === product.id)) {
-                return prev;
+        if (!userId) {
+            // Load from localStorage for guest users
+            const savedWishlist = localStorage.getItem('vatsala_wishlist');
+            if (savedWishlist) {
+                setWishlist(JSON.parse(savedWishlist));
+            } else {
+                setWishlist([]);
             }
-            return [...prev, product];
+            return;
+        }
+
+        // Real-time sync with Firestore for logged-in users
+        const wishlistRef = doc(db, 'wishlists', userId);
+
+        const unsubscribe = onSnapshot(wishlistRef, (docSnap) => {
+            if (docSnap.exists()) {
+                setWishlist(docSnap.data().items || []);
+            } else {
+                setWishlist([]);
+            }
         });
+
+        return () => unsubscribe();
+    }, [userId]);
+
+    // Save wishlist to Firestore or localStorage
+    const saveWishlist = async (newWishlist: Product[]) => {
+        if (userId) {
+            const wishlistRef = doc(db, 'wishlists', userId);
+            await setDoc(wishlistRef, { items: newWishlist, updatedAt: new Date() });
+        } else {
+            localStorage.setItem('vatsala_wishlist', JSON.stringify(newWishlist));
+        }
     };
 
-    const removeFromWishlist = (productId: string) => {
-        setWishlist(prev => prev.filter(p => p.id !== productId));
+    const addToWishlist = async (product: Product) => {
+        if (wishlist.find(p => p.id === product.id)) {
+            return;
+        }
+        const newWishlist = [...wishlist, product];
+        setWishlist(newWishlist);
+        await saveWishlist(newWishlist);
+    };
+
+    const removeFromWishlist = async (productId: string) => {
+        const newWishlist = wishlist.filter(p => p.id !== productId);
+        setWishlist(newWishlist);
+        await saveWishlist(newWishlist);
     };
 
     const isInWishlist = (productId: string) => {

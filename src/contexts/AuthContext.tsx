@@ -1,20 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import {
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    updateProfile,
-    GoogleAuthProvider,
-    signInWithPopup,
-    User as FirebaseUser
-} from 'firebase/auth';
-import { auth } from '../config/firebase';
-
-interface User {
-    id: string;
-    name: string;
-    email: string;
+email: string;
 }
 
 interface AuthContextType {
