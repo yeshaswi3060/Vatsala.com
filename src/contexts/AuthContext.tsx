@@ -5,6 +5,8 @@ import {
     signOut,
     onAuthStateChanged,
     updateProfile,
+    GoogleAuthProvider,
+    signInWithPopup,
     User as FirebaseUser
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
@@ -19,6 +21,7 @@ interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
     login: (email: string, password: string) => Promise<boolean>;
+    loginWithGoogle: () => Promise<boolean>;
     signup: (name: string, email: string, password: string) => Promise<boolean>;
     logout: () => void;
     loading: boolean;
@@ -99,6 +102,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     };
 
+    const loginWithGoogle = async (): Promise<boolean> => {
+        try {
+            const provider = new GoogleAuthProvider();
+            const userCredential = await signInWithPopup(auth, provider);
+
+            setUser({
+                id: userCredential.user.uid,
+                name: userCredential.user.displayName || 'User',
+                email: userCredential.user.email || ''
+            });
+
+            return true;
+        } catch (error: any) {
+            console.error('Google login error:', error);
+            return false;
+        }
+    };
+
     const logout = async () => {
         try {
             await signOut(auth);
@@ -112,6 +133,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         user,
         isAuthenticated: !!user,
         login,
+        loginWithGoogle,
         signup,
         logout,
         loading

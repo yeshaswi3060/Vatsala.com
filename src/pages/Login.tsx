@@ -9,7 +9,7 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { login } = useAuth();
+    const { login, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -35,6 +35,25 @@ const Login = () => {
         setLoading(false);
     };
 
+    const handleGoogleSignIn = async () => {
+        setError('');
+        setLoading(true);
+
+        try {
+            const success = await loginWithGoogle();
+
+            if (success) {
+                navigate(from, { replace: true });
+            } else {
+                setError('Google sign-in failed. Please try again.');
+            }
+        } catch (err) {
+            setError('An error occurred. Please try again.');
+        }
+
+        setLoading(false);
+    };
+
     return (
         <div className="login-page">
             <div className="login-container">
@@ -43,6 +62,20 @@ const Login = () => {
                     <p className="login-subtitle">Login to your Vatsala account</p>
 
                     {error && <div className="error-message">{error}</div>}
+
+                    <button
+                        onClick={handleGoogleSignIn}
+                        className="btn btn-google"
+                        disabled={loading}
+                        type="button"
+                    >
+                        <span className="google-icon">G</span>
+                        Continue with Google
+                    </button>
+
+                    <div className="divider">
+                        <span>OR</span>
+                    </div>
 
                     <form onSubmit={handleSubmit} className="login-form">
                         <div className="form-group">

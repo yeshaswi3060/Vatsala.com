@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Product } from '../utils/constants';
 
-export interface CartItem {
+interface CartItem {
     id: string;
     product: Product;
     size: string;
@@ -50,33 +50,25 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     }, [items]);
 
     const addToCart = (product: Product, size: string, color: string, quantity: number) => {
-        setItems(currentItems => {
-            // Check if item with same product, size, and color already exists
-            const existingItemIndex = currentItems.findIndex(
-                item => item.product.id === product.id && item.size === size && item.color === color
-            );
+        const itemId = `${product.id}-${size}-${color}`;
 
-            if (existingItemIndex > -1) {
-                // Update quantity of existing item
-                const newItems = [...currentItems];
-                newItems[existingItemIndex].quantity += quantity;
-                return newItems;
-            } else {
-                // Add new item
-                const newItem: CartItem = {
-                    id: `${product.id}-${size}-${color}-${Date.now()}`,
-                    product,
-                    size,
-                    color,
-                    quantity
-                };
-                return [...currentItems, newItem];
+        setItems(prevItems => {
+            const existingItem = prevItems.find(item => item.id === itemId);
+
+            if (existingItem) {
+                return prevItems.map(item =>
+                    item.id === itemId
+                        ? { ...item, quantity: item.quantity + quantity }
+                        : item
+                );
             }
+
+            return [...prevItems, { id: itemId, product, size, color, quantity }];
         });
     };
 
     const removeFromCart = (itemId: string) => {
-        setItems(currentItems => currentItems.filter(item => item.id !== itemId));
+        setItems(prevItems => prevItems.filter(item => item.id !== itemId));
     };
 
     const updateQuantity = (itemId: string, quantity: number) => {
@@ -85,8 +77,8 @@ export const CartProvider = ({ children }: CartProviderProps) => {
             return;
         }
 
-        setItems(currentItems =>
-            currentItems.map(item =>
+        setItems(prevItems =>
+            prevItems.map(item =>
                 item.id === itemId ? { ...item, quantity } : item
             )
         );
@@ -96,7 +88,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         setItems([]);
     };
 
-    const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    const itemCount = items.reduce((total, item) => total + item.quantity, 0);
     const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
     const value = {

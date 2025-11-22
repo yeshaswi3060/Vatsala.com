@@ -1,14 +1,22 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext';
 import ProductCard from '../components/ProductCard';
 import { PRODUCTS, formatPrice } from '../utils/constants';
 import '../styles/pages/ProductDetail.css';
 
 const ProductDetail = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
+    const { addToCart } = useCart();
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const product = PRODUCTS.find(p => p.id === id);
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedColor, setSelectedColor] = useState('');
+    const [quantity, setQuantity] = useState(1);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showWishlistMessage, setShowWishlistMessage] = useState('');
 
     if (!product) {
         return (
@@ -25,6 +33,38 @@ const ProductDetail = () => {
     const relatedProducts = PRODUCTS
         .filter(p => p.category === product.category && p.id !== product.id)
         .slice(0, 3);
+
+    const handleAddToCart = () => {
+        if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+            alert('Please select a size');
+            return;
+        }
+        if (product.colors && product.colors.length > 0 && !selectedColor) {
+            alert('Please select a color');
+            return;
+        }
+
+        addToCart(
+            product,
+            selectedSize || 'One Size',
+            selectedColor || 'Default',
+            quantity
+        );
+
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+    };
+
+    const handleWishlistToggle = () => {
+        if (isInWishlist(product.id)) {
+            removeFromWishlist(product.id);
+            setShowWishlistMessage('Removed from wishlist');
+        } else {
+            addToWishlist(product);
+            setShowWishlistMessage('Added to wishlist ❤️');
+        }
+        setTimeout(() => setShowWishlistMessage(''), 3000);
+    };
 
     return (
         <div className="product-detail-page">
@@ -104,9 +144,38 @@ const ProductDetail = () => {
                                 </div>
                             )}
 
+                            <div className="product-quantity">
+                                <label>Quantity:</label>
+                                <div className="quantity-selector">
+                                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>−</button>
+                                    <span>{quantity}</span>
+                                    <button onClick={() => setQuantity(quantity + 1)}>+</button>
+                                </div>
+                            </div>
+
+                            {showSuccess && (
+                                <div className="success-message">
+                                    ✓ Added to cart successfully!
+                                </div>
+                            )}
+
+                            {showWishlistMessage && (
+                                <div className="wishlist-message">
+                                    {showWishlistMessage}
+                                </div>
+                            )}
+
                             <div className="product-actions">
-                                <button className="btn btn-primary btn-large">Add to Cart</button>
-                                <button className="btn btn-outline btn-large">Add to Wishlist</button>
+                                <button className="btn btn-primary btn-large" onClick={handleAddToCart}>
+                                    Add to Cart
+                                </button>
+                                <button
+                                    className={`btn btn-outline btn-large wishlist-btn ${isInWishlist(product.id) ? 'in-wishlist' : ''}`}
+                                    onClick={handleWishlistToggle}
+                                >
+                                    <span className="heart-icon">{isInWishlist(product.id) ? '❤️' : '🤍'}</span>
+                                    {isInWishlist(product.id) ? 'In Wishlist' : 'Add to Wishlist'}
+                                </button>
                             </div>
 
                             <div className="product-features">
