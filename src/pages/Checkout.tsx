@@ -20,7 +20,40 @@ const Checkout = () => {
     const [discount, setDiscount] = useState<{ type: string; value: number; code: string } | null>(null);
     const [promoLoading, setPromoLoading] = useState(false);
 
-    // ... (existing useEffect)
+    const [formData, setFormData] = useState({
+        fullName: user?.name || '',
+        email: user?.email || '',
+        phone: '',
+        address: '',
+        city: '',
+        state: '',
+        pincode: '',
+        paymentMethod: 'cod'
+    });
+
+    // Load saved shipping info on mount
+    useState(() => {
+        const savedShipping = getShippingInfo();
+        if (savedShipping) {
+            setFormData(prev => ({
+                ...prev,
+                fullName: savedShipping.fullName,
+                phone: savedShipping.phone,
+                address: savedShipping.address,
+                city: savedShipping.city,
+                state: savedShipping.state,
+                pincode: savedShipping.pincode
+            }));
+            showToast('Shipping information loaded from your profile', 'info');
+        }
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
 
     const handleApplyPromo = async () => {
         if (!promoCode.trim()) {

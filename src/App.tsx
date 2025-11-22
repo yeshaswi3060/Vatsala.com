@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import { WishlistProvider } from './contexts/WishlistContext';
@@ -29,6 +29,16 @@ import AdminProducts from './pages/admin/AdminProducts';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminPromoCodes from './pages/admin/AdminPromoCodes';
 
+const PublicLayout = () => (
+  <>
+    <Navbar />
+    <main>
+      <Outlet />
+    </main>
+    <Footer />
+  </>
+);
+
 const AppContent = () => {
   const { user } = useAuth();
 
@@ -40,9 +50,9 @@ const AppContent = () => {
           <Toast />
           <Router>
             <div className="app">
-              <Navbar />
-              <main>
-                <Routes>
+              <Routes>
+                {/* Public Routes wrapped in PublicLayout */}
+                <Route element={<PublicLayout />}>
                   <Route path="/" element={<Home />} />
                   <Route path="/shop" element={<Shop />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
@@ -84,18 +94,19 @@ const AppContent = () => {
                       </ProtectedRoute>
                     }
                   />
-                  <Route element={<AdminRoute />}>
-                    <Route element={<AdminLayout />}>
-                      <Route path="/admin" element={<AdminDashboard />} />
-                      <Route path="/admin/products" element={<AdminProducts />} />
-                      <Route path="/admin/orders" element={<AdminDashboard />} />
-                      <Route path="/admin/users" element={<AdminUsers />} />
-                      <Route path="/admin/promocodes" element={<AdminPromoCodes />} />
-                    </Route>
+                </Route>
+
+                {/* Admin Routes - No Navbar/Footer */}
+                <Route element={<AdminRoute />}>
+                  <Route element={<AdminLayout />}>
+                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/admin/products" element={<AdminProducts />} />
+                    <Route path="/admin/orders" element={<AdminDashboard />} />
+                    <Route path="/admin/users" element={<AdminUsers />} />
+                    <Route path="/admin/promocodes" element={<AdminPromoCodes />} />
                   </Route>
-                </Routes>
-              </main>
-              <Footer />
+                </Route>
+              </Routes>
             </div>
           </Router>
         </ProfileProvider>

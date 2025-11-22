@@ -162,8 +162,8 @@ const AdminProducts = () => {
                 <h1>Product Management</h1>
                 <div className="header-actions">
                     {products.length === 0 && (
-                        <button onClick={seedDatabase} className="btn btn-outline">
-                            Seed Database
+                        <button onClick={seedDatabase} className="btn btn-primary seed-btn">
+                            📥 Seed Database with Products
                         </button>
                     )}
                     <button

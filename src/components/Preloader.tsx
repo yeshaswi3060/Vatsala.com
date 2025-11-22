@@ -5,7 +5,6 @@ const Preloader = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Simulate loading time
         const timer = setTimeout(() => {
             setLoading(false);
         }, 2500);
@@ -18,23 +17,11 @@ const Preloader = () => {
     return (
         <div className="preloader">
             <div className="preloader-content">
-                <div className="preloader-logo">
-                    <div className="logo-circle">
-                        <div className="mandala-pattern">
-                            <div className="mandala-layer layer-1"></div>
-                            <div className="mandala-layer layer-2"></div>
-                            <div className="mandala-layer layer-3"></div>
-                        </div>
-                    </div>
-                    <h1 className="preloader-brand">Vatsala</h1>
-                    <p className="preloader-tagline">Traditional Elegance</p>
+                <div className="brand-container">
+                    <h1 className="brand-text">Vatsala</h1>
+                    <div className="brand-line"></div>
+                    <p className="brand-tagline">Timeless Elegance</p>
                 </div>
-                <div className="preloader-spinner">
-                    <div className="spinner-ring"></div>
-                    <div className="spinner-ring"></div>
-                    <div className="spinner-ring"></div>
-                </div>
-                <p className="preloader-text">Loading your experience...</p>
             </div>
         </div>
     );
