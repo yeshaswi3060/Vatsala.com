@@ -22,6 +22,8 @@ import Orders from './pages/Orders';
 import OrderConfirmation from './pages/OrderConfirmation';
 import Wishlist from './pages/Wishlist';
 import Profile from './pages/Profile';
+import AdminRoute from './components/AdminRoute';
+import AdminDashboard from './pages/admin/AdminDashboard';
 
 const AppContent = () => {
   const { user } = useAuth();
@@ -78,6 +80,9 @@ const AppContent = () => {
                       </ProtectedRoute>
                     }
                   />
+                  <Route element={<AdminRoute />}>
+                    <Route path="/admin" element={<AdminDashboard />} />
+                  </Route>
                 </Routes>
               </main>
               <Footer />

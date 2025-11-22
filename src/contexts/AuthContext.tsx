@@ -15,11 +15,13 @@ interface User {
     id: string;
     name: string;
     email: string;
+    isAdmin?: boolean;
 }
 
 interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
+    isAdmin: boolean;
     login: (email: string, password: string) => Promise<boolean>;
     loginWithGoogle: () => Promise<boolean>;
     signup: (name: string, email: string, password: string) => Promise<boolean>;
@@ -45,14 +47,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
+    // Hardcoded admin email for simplicity
+    const ADMIN_EMAIL = 'admin@vatsala.com';
+
     // Listen to Firebase auth state changes
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
             if (firebaseUser) {
+                const email = firebaseUser.email || '';
                 setUser({
                     id: firebaseUser.uid,
                     name: firebaseUser.displayName || 'User',
-                    email: firebaseUser.email || ''
+                    email: email,
+                    isAdmin: email === ADMIN_EMAIL
                 });
             } else {
                 setUser(null);
@@ -75,7 +82,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             setUser({
                 id: userCredential.user.uid,
                 name: name,
-                email: userCredential.user.email || ''
+                email: userCredential.user.email || '',
+                isAdmin: email === ADMIN_EMAIL
             });
 
             return true;
@@ -92,7 +100,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             setUser({
                 id: userCredential.user.uid,
                 name: userCredential.user.displayName || 'User',
-                email: userCredential.user.email || ''
+                email: userCredential.user.email || '',
+                isAdmin: userCredential.user.email === ADMIN_EMAIL
             });
 
             return true;
@@ -106,11 +115,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         try {
             const provider = new GoogleAuthProvider();
             const userCredential = await signInWithPopup(auth, provider);
+            const email = userCredential.user.email || '';
 
             setUser({
                 id: userCredential.user.uid,
                 name: userCredential.user.displayName || 'User',
-                email: userCredential.user.email || ''
+                email: email,
+                isAdmin: email === ADMIN_EMAIL
             });
 
             return true;
@@ -136,6 +147,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const value = {
         user,
         isAuthenticated: !!user,
+        isAdmin: !!user?.isAdmin,
         login,
         loginWithGoogle,
         signup,
