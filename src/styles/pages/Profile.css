@@ -1,0 +1,173 @@
+/* Profile Page Styles */
+
+.profile-page {
+    min-height: 100vh;
+    padding-top: 80px;
+    background: var(--color-bg-dark);
+}
+
+.profile-section {
+    padding: var(--spacing-2xl) 0;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.profile-header h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin-bottom: var(--spacing-sm);
+    background: linear-gradient(135deg, #FFD700 0%, #FF69B4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profile-header p {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+}
+
+/* Profile Content */
+.profile-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Tabs */
+.profile-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab-button {
+    flex: 1;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border-bottom: 3px solid transparent;
+    position: relative;
+    bottom: -2px;
+}
+
+.tab-button:hover {
+    color: var(--color-text-primary);
+}
+
+.tab-button.active {
+    color: var(--color-text-primary);
+    border-bottom-color: #FF69B4;
+}
+
+/* Form Container */
+.profile-form-container {
+    background: var(--color-bg-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.profile-form h2 {
+    font-size: 1.75rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+.form-description {
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-xl);
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-family: var(--font-primary);
+    transition: all var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #FF69B4;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
+}
+
+.form-group input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--color-text-muted);
+}
+
+.form-group small {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Form Row */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+}
+
+/* Submit Button */
+.profile-form .btn-large {
+    margin-top: var(--spacing-md);
+    width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-form-container {
+        padding: var(--spacing-xl);
+    }
+
+    .tab-button {
+        font-size: 0.9rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}

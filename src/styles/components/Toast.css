@@ -1,0 +1,97 @@
+/* Toast Notification Styles */
+
+.toast-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    max-width: 400px;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: slideInRight 0.3s ease-out;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast-success {
+    background: linear-gradient(135deg, rgba(0, 201, 255, 0.9) 0%, rgba(146, 254, 157, 0.9) 100%);
+    color: var(--color-bg-dark);
+}
+
+.toast-error {
+    background: linear-gradient(135deg, rgba(255, 65, 108, 0.9) 0%, rgba(255, 75, 43, 0.9) 100%);
+    color: white;
+}
+
+.toast-warning {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.9) 0%, rgba(255, 152, 0, 0.9) 100%);
+    color: var(--color-bg-dark);
+}
+
+.toast-info {
+    background: linear-gradient(135deg, rgba(66, 133, 244, 0.9) 0%, rgba(33, 150, 243, 0.9) 100%);
+    color: white;
+}
+
+.toast-icon {
+    font-size: 1.5rem;
+    font-weight: 700;
+    min-width: 24px;
+    text-align: center;
+}
+
+.toast-message {
+    flex: 1;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: opacity var(--transition-fast);
+}
+
+.toast-close:hover {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .toast-container {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}

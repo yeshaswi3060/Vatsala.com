@@ -1,16 +1,31 @@
-import { useLocation, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { formatPrice } from '../utils/constants';
 import '../styles/pages/OrderConfirmation.css';
 
 const OrderConfirmation = () => {
-    const location = useLocation();
-    const order = location.state?.order;
+    const { orderId } = useParams();
+    const [order, setOrder] = useState<any>(null);
+
+    useEffect(() => {
+        // Load order from localStorage
+        const ordersData = localStorage.getItem('vatsala_orders');
+        if (ordersData) {
+            const orders = JSON.parse(ordersData);
+            const foundOrder = orders.find((o: any) => o.id === orderId);
+            setOrder(foundOrder);
+        }
+    }, [orderId]);
 
     if (!order) {
         return (
             <div className="order-confirmation-page">
                 <div className="container">
-                    <p>No order found. <Link to="/shop">Continue Shopping</Link></p>
+                    <div className="confirmation-card">
+                        <h1>Order Not Found</h1>
+                        <p>We couldn't find the order you're looking for.</p>
+                        <Link to="/shop" className="btn btn-primary">Continue Shopping</Link>
+                    </div>
                 </div>
             </div>
         );
@@ -57,7 +72,6 @@ const OrderConfirmation = () => {
                         <h3>Order Items</h3>
                         {order.items.map((item: any) => (
                             <div key={item.id} className="confirmation-item">
-                                <img src={item.product.image} alt={item.product.name} />
                                 <div className="item-details">
                                     <p className="item-name">{item.product.name}</p>
                                     <p className="item-options">{item.size} • {item.color} • Qty: {item.quantity}</p>

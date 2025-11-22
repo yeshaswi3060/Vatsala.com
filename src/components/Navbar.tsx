@@ -7,7 +7,7 @@ import '../styles/components/Navbar.css';
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [showUserMenu, setShowUserMenu] = useState(false);
     const { isAuthenticated, user, logout } = useAuth();
     const { itemCount } = useCart();
 
@@ -18,6 +18,11 @@ const Navbar = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    const handleLogout = () => {
+        logout();
+        setShowUserMenu(false);
+    };
 
     return (
         <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
@@ -53,16 +58,15 @@ const Navbar = () => {
 
                         {isAuthenticated ? (
                             <div className="user-menu">
-                                <button
-                                    className="user-menu-button"
-                                    onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                >
+                                <button className="user-menu-button" onClick={() => setShowUserMenu(!showUserMenu)}>
                                     👤 {user?.name}
                                 </button>
-                                {userMenuOpen && (
+                                {showUserMenu && (
                                     <div className="user-menu-dropdown">
-                                        <Link to="/orders" onClick={() => setUserMenuOpen(false)}>My Orders</Link>
-                                        <button onClick={() => { logout(); setUserMenuOpen(false); }}>Logout</button>
+                                        <Link to="/profile" onClick={() => setShowUserMenu(false)}>My Profile</Link>
+                                        <Link to="/wishlist" onClick={() => setShowUserMenu(false)}>My Wishlist</Link>
+                                        <Link to="/orders" onClick={() => setShowUserMenu(false)}>My Orders</Link>
+                                        <button onClick={handleLogout}>Logout</button>
                                     </div>
                                 )}
                             </div>

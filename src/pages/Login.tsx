@@ -56,10 +56,12 @@ const Login = () => {
 
     return (
         <div className="login-page">
-            <div className="login-container">
-                <div className="login-card">
-                    <h1>Welcome Back</h1>
-                    <p className="login-subtitle">Login to your Vatsala account</p>
+            <div className="auth-container">
+                <div className="auth-card">
+                    <div className="auth-header">
+                        <h1>Welcome Back</h1>
+                        <p>Login to your Vatsala account</p>
+                    </div>
 
                     {error && <div className="error-message">{error}</div>}
 
@@ -77,7 +79,7 @@ const Login = () => {
                         <span>OR</span>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="login-form">
+                    <form onSubmit={handleSubmit} className="auth-form">
                         <div className="form-group">
                             <label htmlFor="email">Email Address</label>
                             <input
@@ -107,7 +109,7 @@ const Login = () => {
                         </button>
                     </form>
 
-                    <p className="login-footer">
+                    <p className="auth-footer">
                         Don't have an account? <Link to="/signup">Sign up</Link>
                     </p>
                 </div>

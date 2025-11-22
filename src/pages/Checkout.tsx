@@ -1,13 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useProfile } from '../contexts/ProfileContext';
+import { useToast } from '../contexts/ToastContext';
 import { formatPrice } from '../utils/constants';
 import '../styles/pages/Checkout.css';
 
 const Checkout = () => {
     const { items, total, clearCart } = useCart();
     const { user } = useAuth();
+    const { getShippingInfo, saveShippingInfo } = useProfile();
+    const { showToast } = useToast();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -21,6 +25,23 @@ const Checkout = () => {
         paymentMethod: 'cod'
     });
 
+    // Load saved shipping info on mount
+    useEffect(() => {
+        const savedShipping = getShippingInfo();
+        if (savedShipping) {
+            setFormData(prev => ({
+                ...prev,
+                fullName: savedShipping.fullName,
+                phone: savedShipping.phone,
+                address: savedShipping.address,
+                city: savedShipping.city,
+                state: savedShipping.state,
+                pincode: savedShipping.pincode
+            }));
+            showToast('Shipping information loaded from your profile', 'info');
+        }
+    }, []);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setFormData({
             ...formData,
@@ -30,6 +51,16 @@ const Checkout = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Save shipping info to profile for future use
+        saveShippingInfo({
+            fullName: formData.fullName,
+            address: formData.address,
+            city: formData.city,
+            state: formData.state,
+            pincode: formData.pincode,
+            phone: formData.phone
+        });
 
         // Create order
         const order = {
@@ -60,9 +91,23 @@ const Checkout = () => {
         // Clear cart
         clearCart();
 
-        // Navigate to order confirmation
-        navigate('/order-confirmation', { state: { order } });
+        // Navigate to order confirmation with order ID
+        navigate(`/order-confirmation/${order.id}`);
     };
+
+    if (items.length === 0) {
+        return (
+            <div className="checkout-page">
+                <div className="container">
+                    <div className="empty-cart">
+                        <h1>Your cart is empty</h1>
+                        <p>Add some items to your cart before checking out</p>
+                        <a href="/shop" className="btn btn-primary">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="checkout-page">
@@ -206,7 +251,6 @@ const Checkout = () => {
                         <div className="summary-items">
                             {items.map((item) => (
                                 <div key={item.id} className="summary-item">
-                                    <img src={item.product.image} alt={item.product.name} />
                                     <div className="summary-item-details">
                                         <p className="summary-item-name">{item.product.name}</p>
                                         <p className="summary-item-options">

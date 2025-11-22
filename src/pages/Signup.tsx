@@ -11,14 +11,13 @@ const Signup = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { signup } = useAuth();
+    const { signup, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
 
-        // Validation
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
@@ -46,16 +45,51 @@ const Signup = () => {
         setLoading(false);
     };
 
+    const handleGoogleSignUp = async () => {
+        setError('');
+        setLoading(true);
+
+        try {
+            const success = await loginWithGoogle();
+
+            if (success) {
+                navigate('/');
+            } else {
+                setError('Google sign-up failed. Please try again.');
+            }
+        } catch (err) {
+            setError('An error occurred. Please try again.');
+        }
+
+        setLoading(false);
+    };
+
     return (
         <div className="signup-page">
-            <div className="signup-container">
-                <div className="signup-card">
-                    <h1>Create Account</h1>
-                    <p className="signup-subtitle">Join Vatsala and start shopping</p>
+            <div className="auth-container">
+                <div className="auth-card">
+                    <div className="auth-header">
+                        <h1>Create Account</h1>
+                        <p>Join Vatsala and start your shopping journey</p>
+                    </div>
 
                     {error && <div className="error-message">{error}</div>}
 
-                    <form onSubmit={handleSubmit} className="signup-form">
+                    <button
+                        onClick={handleGoogleSignUp}
+                        className="btn btn-google"
+                        disabled={loading}
+                        type="button"
+                    >
+                        <span className="google-icon">G</span>
+                        Continue with Google
+                    </button>
+
+                    <div className="divider">
+                        <span>OR</span>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="auth-form">
                         <div className="form-group">
                             <label htmlFor="name">Full Name</label>
                             <input
@@ -109,7 +143,7 @@ const Signup = () => {
                         </button>
                     </form>
 
-                    <p className="signup-footer">
+                    <p className="auth-footer">
                         Already have an account? <Link to="/login">Login</Link>
                     </p>
                 </div>
