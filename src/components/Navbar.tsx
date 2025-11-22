@@ -19,7 +19,7 @@ const Navbar = () => {
             <div className="container">
                 <div className="nav-content">
                     <Link to="/" className="logo">
-                        <span className="logo-text">Shringaar</span>
+                        <span className="logo-text">Vatsala</span>
                         <span className="logo-subtitle">Traditional Elegance</span>
                     </Link>
 

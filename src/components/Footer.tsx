@@ -8,7 +8,7 @@ const Footer = () => {
                 <div className="footer-content">
                     <div className="footer-section">
                         <div className="footer-logo">
-                            <span className="logo-text">Shringaar</span>
+                            <span className="logo-text">Vatsala</span>
                             <span className="logo-subtitle">Traditional Elegance</span>
                         </div>
                         <p>Celebrating the beauty of Indian traditional wear with premium quality and timeless designs.</p>
@@ -60,7 +60,7 @@ const Footer = () => {
                 </div>
 
                 <div className="footer-bottom">
-                    <p>&copy; 2024 Shringaar. All rights reserved. Crafted with love for traditional Indian fashion.</p>
+                    <p>&copy; 2024 Vatsala. All rights reserved. Crafted with love for traditional Indian fashion.</p>
                 </div>
             </div>
         </footer>

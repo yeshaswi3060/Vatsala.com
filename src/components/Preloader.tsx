@@ -26,7 +26,7 @@ const Preloader = () => {
                             <div className="mandala-layer layer-3"></div>
                         </div>
                     </div>
-                    <h1 className="preloader-brand">Shringaar</h1>
+                    <h1 className="preloader-brand">Vatsala</h1>
                     <p className="preloader-tagline">Traditional Elegance</p>
                 </div>
                 <div className="preloader-spinner">

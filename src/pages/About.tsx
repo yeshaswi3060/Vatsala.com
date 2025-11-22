@@ -15,9 +15,9 @@ const About = () => {
                 <div className="container">
                     <div className="about-grid">
                         <div className="about-text">
-                            <h2>Welcome to <span className="gradient-text">Shringaar</span></h2>
+                            <h2>Welcome to <span className="gradient-text">Vatsala</span></h2>
                             <p>
-                                Shringaar was born from a deep love and respect for Indian traditional wear. We believe that
+                                Vatsala was born from a deep love and respect for Indian traditional wear. We believe that
                                 every woman deserves to feel beautiful, confident, and connected to her cultural roots through
                                 the clothes she wears.
                             </p>
