@@ -1,4 +1,4 @@
-# Vatsala.com - Women's Traditional Indian Clothing Store
+# Vatsalya.com - Women's Traditional Indian Clothing Store
 
 A beautiful, modern e-commerce website for women's traditional Indian clothing built with React, TypeScript, and Vite.
 
@@ -32,8 +32,8 @@ A beautiful, modern e-commerce website for women's traditional Indian clothing b
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yeshaswi3060/Vatsala.com.git
-cd Vatsala.com
+git clone https://github.com/yeshaswi3060/Vatsalya.com.git
+cd Vatsalya.com
 ```
 
 2. Install dependencies

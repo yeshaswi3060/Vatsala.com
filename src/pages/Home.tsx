@@ -155,10 +155,10 @@ const Home = () => {
                 <div className="container">
                     <div className="story-content">
                         <div className="story-text">
-                            <p className="section-subtitle">About Vatsala</p>
+                            <p className="section-subtitle">About Vatsalya</p>
                             <h2>Crafting <span className="gradient-text">Traditions</span></h2>
                             <p>
-                                At Vatsala, we celebrate the rich heritage of Indian traditional wear. Each piece in our
+                                At Vatsalya, we celebrate the rich heritage of Indian traditional wear. Each piece in our
                                 collection is carefully curated to bring you the finest quality fabrics, intricate craftsmanship,
                                 and timeless designs that honor our cultural legacy.
                             </p>

@@ -70,7 +70,7 @@ const Login = () => {
                 <div className="auth-card">
                     <div className="auth-header">
                         <h1>Welcome Back</h1>
-                        <p>Login to your Vatsala account</p>
+                        <p>Login to your Vatsalya account</p>
                     </div>
 
                     {error && <div className="error-message">{error}</div>}

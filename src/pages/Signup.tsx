@@ -72,7 +72,7 @@ const Signup = () => {
                 <div className="auth-card">
                     <div className="auth-header">
                         <h1>Create Account</h1>
-                        <p>Join Vatsala and start your shopping journey</p>
+                        <p>Join Vatsalya and start your shopping journey</p>
                     </div>
 
                     {error && <div className="error-message">{error}</div>}

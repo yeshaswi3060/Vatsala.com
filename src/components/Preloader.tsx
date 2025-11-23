@@ -18,7 +18,7 @@ const Preloader = () => {
         <div className="preloader">
             <div className="preloader-content">
                 <div className="brand-container">
-                    <h1 className="brand-text">Vatsala</h1>
+                    <h1 className="brand-text">Vatsalya</h1>
                     <div className="brand-line"></div>
                     <p className="brand-tagline">Timeless Elegance</p>
                 </div>
