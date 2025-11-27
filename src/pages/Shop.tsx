@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
 import ProductCard from '../components/ProductCard';
-import { CATEGORIES } from '../utils/constants';
+import { CATEGORIES, PRODUCTS } from '../utils/constants';
 import '../styles/pages/Shop.css';
 
 const Shop = () => {
@@ -21,29 +19,13 @@ const Shop = () => {
     }, [searchParams]);
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            setLoading(true);
-            try {
-                const productsRef = collection(db, 'products');
-                // Fetch all products initially, filter client-side for smoother category switching
-                // In a larger app, we would query by category server-side
-                const querySnapshot = await getDocs(productsRef);
-                const productsData = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-
-                // Filter out hidden products
-                const visibleProducts = productsData.filter((p: any) => !p.isHidden);
-                setProducts(visibleProducts);
-            } catch (error) {
-                console.error('Error fetching products:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
+        // Use local data for guaranteed visibility
+        setLoading(true);
+        // Simulate a small delay for better UX
+        setTimeout(() => {
+            setProducts(PRODUCTS);
+            setLoading(false);
+        }, 300);
     }, []);
 
     const handleCategoryChange = (category: string) => {

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, getDocs, query, limit } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { PRODUCTS } from '../utils/constants';
 import ProductCard from '../components/ProductCard';
 import Newsletter from '../components/Newsletter';
 import '../styles/pages/Home.css';
@@ -11,28 +10,9 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchFeaturedProducts = async () => {
-            try {
-                const productsRef = collection(db, 'products');
-                // In a real app, we might have a 'featured' flag or sort by popularity
-                // For now, just fetch the first 4 visible products
-                const q = query(productsRef, limit(10));
-                const querySnapshot = await getDocs(q);
-
-                const products = querySnapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
-                    .filter((p: any) => !p.isHidden)
-                    .slice(0, 4);
-
-                setFeaturedProducts(products);
-            } catch (error) {
-                console.error('Error fetching featured products:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchFeaturedProducts();
+        // Use local data for guaranteed visibility
+        setFeaturedProducts(PRODUCTS.slice(0, 4));
+        setLoading(false);
     }, []);
 
     return (
