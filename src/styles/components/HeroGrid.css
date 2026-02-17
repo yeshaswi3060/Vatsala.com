@@ -1,0 +1,193 @@
+/* HeroGrid.css */
+
+.hero-grid-section {
+    padding: var(--spacing-md) 0;
+    margin-top: 2rem;
+    /* Space from header */
+    margin-bottom: 2rem;
+    /* Space from next section */
+    padding-bottom: 2rem;
+    background: var(--color-bg-dark);
+    position: relative;
+    z-index: 10;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    /* Wider main banner */
+    gap: var(--spacing-md);
+    min-height: 500px;
+    /* Flexible height */
+}
+
+@media (max-width: 768px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: auto;
+    }
+
+    .hero-main-banner {
+        height: 300px;
+    }
+
+    .hero-side-banners {
+        flex-direction: row;
+        height: 150px;
+    }
+
+    .side-banner {
+        height: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-side-banners {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .side-banner {
+        height: 150px;
+    }
+}
+
+/* Main Banner */
+.hero-main-banner {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    height: 100%;
+}
+
+.hero-main-banner .banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1s ease;
+}
+
+.hero-main-banner:hover .banner-img {
+    transform: scale(1.05);
+}
+
+.hero-main-banner .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+    z-index: 1;
+}
+
+.banner-content {
+    position: absolute;
+    top: 50%;
+    left: 4rem;
+    transform: translateY(-50%);
+    z-index: 2;
+    max-width: 500px;
+}
+
+.banner-content h2 {
+    font-size: 3.5rem;
+    color: white;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    line-height: 1.1;
+}
+
+.banner-content p {
+    font-size: 1.2rem;
+    color: #ddd;
+    margin-bottom: 1.5rem;
+}
+
+/* Side Banners */
+.hero-side-banners {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    height: 100%;
+}
+
+.side-banner {
+    position: relative;
+    flex: 1;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.side-banner .banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.side-banner:hover .banner-img {
+    transform: scale(1.1);
+}
+
+.side-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    color: white;
+}
+
+.side-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
+    color: var(--color-gold);
+}
+
+.side-content span {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.cover-link {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+}
+
+@media (max-width: 900px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .hero-main-banner {
+        height: 400px;
+    }
+
+    .hero-side-banners {
+        flex-direction: row;
+        height: 200px;
+    }
+}
+
+@media (max-width: 600px) {
+    .banner-content h2 {
+        font-size: 2rem;
+    }
+
+    .banner-content {
+        left: 2rem;
+    }
+
+    .hero-side-banners {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .side-banner {
+        height: 200px;
+    }
+}

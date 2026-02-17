@@ -1,7 +1,11 @@
 .feature-strip {
     background: var(--color-bg-medium);
     padding: var(--spacing-xl) 0;
+    padding-top: calc(var(--spacing-xl) + 40px);
+    /* Accommodate overlap */
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    z-index: 5;
 }
 
 .feature-container {

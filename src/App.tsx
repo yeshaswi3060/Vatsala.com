@@ -4,7 +4,7 @@ import { CartProvider } from './contexts/CartContext';
 import { WishlistProvider } from './contexts/WishlistContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { ProfileProvider } from './contexts/ProfileContext';
-import Navbar from './components/Navbar';
+import Header from './components/Header';
 import Footer from './components/Footer';
 import Preloader from './components/Preloader';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -32,8 +32,9 @@ import AdminPromoCodes from './pages/admin/AdminPromoCodes';
 
 const PublicLayout = () => (
   <>
-    <Navbar />
-    <main>
+    <Header />
+    <main style={{ marginTop: 0 }}>
+      {/* Header is sticky but not fixed-overlay, so no margins needed */}
       <Outlet />
     </main>
     <Footer />

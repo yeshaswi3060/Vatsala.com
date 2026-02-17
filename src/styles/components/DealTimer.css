@@ -1,0 +1,78 @@
+.deal-timer-container {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin: var(--spacing-lg) auto;
+    max-width: 900px;
+    box-shadow: var(--shadow-md);
+    color: white;
+}
+
+.deal-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.deal-text h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.deal-text p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+}
+
+.timer-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    min-width: 60px;
+}
+
+.time-unit .number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.time-unit .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.colon {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: -15px;
+}
+
+@media (max-width: 768px) {
+    .deal-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .time-unit {
+        min-width: 50px;
+    }
+
+    .time-unit .number {
+        font-size: 1.2rem;
+    }
+}

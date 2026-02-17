@@ -3,7 +3,7 @@
    =================================== */
 
 :root {
-  /* Traditional Indian Color Palette */
+  /* Traditional Indian Color Palette - Dark Theme */
   --color-primary: hsl(320, 70%, 45%);
   --color-primary-light: hsl(320, 70%, 55%);
   --color-primary-dark: hsl(320, 70%, 35%);
@@ -14,7 +14,7 @@
   --color-gold: hsl(45, 90%, 60%);
   --color-gold-light: hsl(45, 90%, 70%);
 
-  /* Neutrals */
+  /* Neutrals - Dark Theme */
   --color-bg-dark: hsl(240, 15%, 8%);
   --color-bg-medium: hsl(240, 10%, 12%);
   --color-bg-light: hsl(240, 8%, 18%);
