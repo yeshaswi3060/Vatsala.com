@@ -11,7 +11,7 @@ const Wishlist = () => {
     const { showToast } = useToast();
 
     const handleAddToCart = (product: any) => {
-        addToCart(product, 'One Size', 'Default', 1);
+        addToCart(product, product.variantId || '', 'One Size', 'Default', 1);
         showToast(`${product.name} added to cart!`, 'success');
     };
 

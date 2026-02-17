@@ -245,14 +245,13 @@ export async function createCheckout(
     lineItems: { variantId: string; quantity: number }[]
 ): Promise<string> {
     const query = `
-        mutation CreateCheckout($input: CheckoutCreateInput!) {
-            checkoutCreate(input: $input) {
-                checkout {
+        mutation CreateCart($lines: [CartLineInput!]!) {
+            cartCreate(input: { lines: $lines }) {
+                cart {
                     id
-                    webUrl
+                    checkoutUrl
                 }
-                checkoutUserErrors {
-                    code
+                userErrors {
                     field
                     message
                 }
@@ -260,29 +259,29 @@ export async function createCheckout(
         }
     `;
 
-    const input = {
-        lineItems: lineItems.map((item) => ({
-            variantId: item.variantId,
+    const variables = {
+        lines: lineItems.map((item) => ({
+            merchandiseId: item.variantId,
             quantity: item.quantity,
         })),
     };
 
     const data = await shopifyFetch<{
-        checkoutCreate: {
-            checkout: { id: string; webUrl: string } | null;
-            checkoutUserErrors: { code: string; field: string[]; message: string }[];
+        cartCreate: {
+            cart: { id: string; checkoutUrl: string } | null;
+            userErrors: { field: string[]; message: string }[];
         };
-    }>(query, { input });
+    }>(query, variables);
 
-    if (data.checkoutCreate.checkoutUserErrors.length > 0) {
-        throw new Error(data.checkoutCreate.checkoutUserErrors[0].message);
+    if (data.cartCreate.userErrors.length > 0) {
+        throw new Error(data.cartCreate.userErrors[0].message);
     }
 
-    if (!data.checkoutCreate.checkout) {
-        throw new Error('Failed to create checkout');
+    if (!data.cartCreate.cart) {
+        throw new Error('Failed to create cart');
     }
 
-    return data.checkoutCreate.checkout.webUrl;
+    return data.cartCreate.cart.checkoutUrl;
 }
 
 // ----- Normalization Helper -----

@@ -67,10 +67,19 @@ const Login = () => {
     return (
         <div className="login-page">
             <div className="auth-container">
-                <div className="auth-card">
+                {/* Left Side - Brand Panel */}
+                <div className="auth-left">
+                    <div className="auth-left-content">
+                        <h2>Timeless<br />Elegance</h2>
+                        <p>Join our exclusive community of<br />fashion enthusiasts.</p>
+                    </div>
+                </div>
+
+                {/* Right Side - Login Form */}
+                <div className="auth-right">
                     <div className="auth-header">
                         <h1>Welcome Back</h1>
-                        <p>Login to your AllCloths account</p>
+                        <p>Login to your account</p>
                     </div>
 
                     {error && <div className="error-message">{error}</div>}
@@ -92,26 +101,40 @@ const Login = () => {
                     <form onSubmit={handleSubmit} className="auth-form">
                         <div className="form-group">
                             <label htmlFor="email">Email Address</label>
-                            <input
-                                type="email"
-                                id="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                placeholder="your.email@example.com"
-                            />
+                            <div className="input-wrapper">
+                                <span className="input-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </span>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    placeholder="your.email@example.com"
+                                />
+                            </div>
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="password">Password</label>
-                            <input
-                                type="password"
-                                id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                placeholder="Enter your password"
-                            />
+                            <div className="input-wrapper">
+                                <span className="input-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </span>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    placeholder="Enter your password"
+                                />
+                            </div>
                         </div>
 
                         <button type="submit" className="btn btn-primary btn-large" disabled={loading}>

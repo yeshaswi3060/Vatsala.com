@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import Preloader from './components/Preloader';
 import ProtectedRoute from './components/ProtectedRoute';
 import Toast from './components/Toast';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import ProductDetail from './pages/ProductDetail';
@@ -49,6 +50,7 @@ const AppContent = () => {
           <Preloader />
           <Toast />
           <Router>
+            <ScrollToTop />
             <div className="app">
               <Routes>
                 {/* Public Routes wrapped in PublicLayout */}

@@ -1,0 +1,48 @@
+.marquee-container {
+    background: linear-gradient(90deg, #8B008B 0%, #4B0082 100%);
+    color: white;
+    padding: 10px 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 1000;
+    /* Ensure it stays below navbar if fixed, or above content */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.marquee-content {
+    display: flex;
+    gap: 4rem;
+    animation: scroll 20s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+}
+
+.marquee-item {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.marquee-container:hover .marquee-content {
+    animation-play-state: paused;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Mobile speed adjustment */
+@media (max-width: 768px) {
+    .marquee-content {
+        animation-duration: 15s;
+    }
+}

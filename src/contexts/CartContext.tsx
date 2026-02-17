@@ -5,7 +5,9 @@ import type { Product } from '../utils/constants';
 
 interface CartItem {
     id: string;
+    description?: string; // Adding optional description for backward compatibility if needed
     product: Product;
+    variantId: string;
     size: string;
     color: string;
     quantity: number;
@@ -15,7 +17,7 @@ interface CartContextType {
     items: CartItem[];
     itemCount: number;
     total: number;
-    addToCart: (product: Product, size: string, color: string, quantity: number) => void;
+    addToCart: (product: Product, variantId: string, size: string, color: string, quantity: number) => void;
     removeFromCart: (itemId: string) => void;
     updateQuantity: (itemId: string, quantity: number) => void;
     clearCart: () => void;
@@ -78,7 +80,7 @@ export const CartProvider = ({ children, userId }: CartProviderProps) => {
         }
     };
 
-    const addToCart = async (product: Product, size: string, color: string, quantity: number) => {
+    const addToCart = async (product: Product, variantId: string, size: string, color: string, quantity: number) => {
         const itemId = `${product.id}-${size}-${color}`;
 
         const newItems = [...items];
@@ -87,7 +89,7 @@ export const CartProvider = ({ children, userId }: CartProviderProps) => {
         if (existingItem) {
             existingItem.quantity += quantity;
         } else {
-            newItems.push({ id: itemId, product, size, color, quantity });
+            newItems.push({ id: itemId, product, variantId, size, color, quantity });
         }
 
         setItems(newItems);

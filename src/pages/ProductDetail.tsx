@@ -93,8 +93,25 @@ const ProductDetail = () => {
             return;
         }
 
+        // Find the specific variant ID for the selected options
+        let selectedVariantId = product.variantId; // Default to first variant
+
+        if (product.variants && product.variants.length > 0) {
+            const matchedVariant = product.variants.find(variant => {
+                const options = variant.options || [];
+                const sizeMatch = !selectedSize || options.some(opt => opt.name.toLowerCase() === 'size' && opt.value === selectedSize);
+                const colorMatch = !selectedColor || options.some(opt => (opt.name.toLowerCase() === 'color' || opt.name.toLowerCase() === 'colour') && opt.value === selectedColor);
+                return sizeMatch && colorMatch;
+            });
+
+            if (matchedVariant) {
+                selectedVariantId = matchedVariant.id;
+            }
+        }
+
         addToCart(
             product,
+            selectedVariantId || '',
             selectedSize || 'One Size',
             selectedColor || 'Default',
             quantity

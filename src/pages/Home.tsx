@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 import { shopifyToProduct, type Product } from '../utils/constants';
 import { fetchAllProducts } from '../lib/shopify';
 import ProductCard from '../components/ProductCard';
+import Marquee from '../components/Marquee';
+import FeatureStrip from '../components/FeatureStrip';
+import Testimonials from '../components/Testimonials';
 import Newsletter from '../components/Newsletter';
+import NewsletterPopup from '../components/NewsletterPopup';
 import '../styles/pages/Home.css';
 
 const Home = () => {
@@ -24,8 +28,27 @@ const Home = () => {
             });
     }, []);
 
+    const [currentOfferIndex, setCurrentOfferIndex] = useState(0);
+    const offers = [
+        "Flat 50% Off On New Arrivals",
+        "Free Shipping On Orders Above ₹999",
+        "Exclusive Wedding Collection Live"
+    ];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentOfferIndex((prev) => (prev + 1) % offers.length);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div className="home-page">
+            {/* Top Marquee */}
+            <div style={{ marginTop: '65px' }}>
+                <Marquee />
+            </div>
+
             {/* Hero Section */}
             <section className="hero">
                 <div className="hero-background"></div>
@@ -34,6 +57,11 @@ const Home = () => {
                 <div className="hero-decoration decoration-2"></div>
 
                 <div className="hero-content">
+                    <div className="hero-offer-badge">
+                        <span key={currentOfferIndex} className="offer-text">
+                            {offers[currentOfferIndex]}
+                        </span>
+                    </div>
                     <p className="hero-subtitle gradient-text">Celebrating Indian Heritage</p>
                     <h1 className="hero-title">
                         Timeless <span className="gold-text">Elegance</span>
@@ -43,11 +71,14 @@ const Home = () => {
                         embrace the beauty of Indian craftsmanship.
                     </p>
                     <div className="hero-cta">
-                        <Link to="/shop" className="btn btn-primary">Explore Collection</Link>
+                        <Link to="/shop" className="btn btn-primary pulsing-btn">Explore Collection</Link>
                         <Link to="/about" className="btn btn-outline">Our Story</Link>
                     </div>
                 </div>
             </section>
+
+            {/* Features Strip */}
+            <FeatureStrip />
 
             {/* Collections Section */}
             <section className="collections section">
@@ -166,8 +197,14 @@ const Home = () => {
                 </div>
             </section>
 
+            {/* Testimonials */}
+            <Testimonials />
+
             {/* Newsletter */}
             <Newsletter />
+
+            {/* Popup */}
+            <NewsletterPopup />
         </div>
     );
 };
