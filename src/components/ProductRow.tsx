@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import type { Product } from '../utils/constants';
 import ProductSlider from './ProductSlider';
