@@ -48,7 +48,7 @@ const Contact = () => {
                                     <div className="contact-icon">📧</div>
                                     <div>
                                         <h3>Email</h3>
-                                        <p>support@vatsala.com</p>
+                                        <p>support@allcloths.com</p>
                                     </div>
                                 </div>
 

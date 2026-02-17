@@ -43,7 +43,7 @@ export const CartProvider = ({ children, userId }: CartProviderProps) => {
     useEffect(() => {
         if (!userId) {
             // Load from localStorage for guest users
-            const savedCart = localStorage.getItem('vatsala_cart');
+            const savedCart = localStorage.getItem('allcloths_cart');
             if (savedCart) {
                 setItems(JSON.parse(savedCart));
             } else {
@@ -74,7 +74,7 @@ export const CartProvider = ({ children, userId }: CartProviderProps) => {
             await setDoc(cartRef, { items: newItems, updatedAt: new Date() });
         } else {
             // Save to localStorage for guest users
-            localStorage.setItem('vatsala_cart', JSON.stringify(newItems));
+            localStorage.setItem('allcloths_cart', JSON.stringify(newItems));
         }
     };
 

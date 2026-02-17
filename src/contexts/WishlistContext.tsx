@@ -32,7 +32,7 @@ export const WishlistProvider = ({ children, userId }: WishlistProviderProps) =>
     useEffect(() => {
         if (!userId) {
             // Load from localStorage for guest users
-            const savedWishlist = localStorage.getItem('vatsala_wishlist');
+            const savedWishlist = localStorage.getItem('allcloths_wishlist');
             if (savedWishlist) {
                 setWishlist(JSON.parse(savedWishlist));
             } else {
@@ -61,7 +61,7 @@ export const WishlistProvider = ({ children, userId }: WishlistProviderProps) =>
             const wishlistRef = doc(db, 'wishlists', userId);
             await setDoc(wishlistRef, { items: newWishlist, updatedAt: new Date() });
         } else {
-            localStorage.setItem('vatsala_wishlist', JSON.stringify(newWishlist));
+            localStorage.setItem('allcloths_wishlist', JSON.stringify(newWishlist));
         }
     };
 

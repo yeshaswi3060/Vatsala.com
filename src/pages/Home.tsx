@@ -1,18 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { PRODUCTS } from '../utils/constants';
+import { shopifyToProduct, type Product } from '../utils/constants';
+import { fetchAllProducts } from '../lib/shopify';
 import ProductCard from '../components/ProductCard';
 import Newsletter from '../components/Newsletter';
 import '../styles/pages/Home.css';
 
 const Home = () => {
-    const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+    const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Use local data for guaranteed visibility
-        setFeaturedProducts(PRODUCTS.slice(0, 4));
-        setLoading(false);
+        fetchAllProducts(8)
+            .then((shopifyProducts) => {
+                const mapped = shopifyProducts.map(shopifyToProduct);
+                setFeaturedProducts(mapped.slice(0, 4));
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error('Failed to fetch featured products:', err);
+                setFeaturedProducts([]);
+                setLoading(false);
+            });
     }, []);
 
     return (
@@ -135,10 +144,10 @@ const Home = () => {
                 <div className="container">
                     <div className="story-content">
                         <div className="story-text">
-                            <p className="section-subtitle">About Vatsalya</p>
+                            <p className="section-subtitle">About AllCloths</p>
                             <h2>Crafting <span className="gradient-text">Traditions</span></h2>
                             <p>
-                                At Vatsalya, we celebrate the rich heritage of Indian traditional wear. Each piece in our
+                                At AllCloths, we celebrate the rich heritage of Indian traditional wear. Each piece in our
                                 collection is carefully curated to bring you the finest quality fabrics, intricate craftsmanship,
                                 and timeless designs that honor our cultural legacy.
                             </p>

@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [loading, setLoading] = useState(true);
 
     // Hardcoded admin email for simplicity
-    const ADMIN_EMAIL = 'admin@vatsala.com';
+    const ADMIN_EMAIL = 'admin@allcloths.com';
 
     // Listen to Firebase auth state changes
     useEffect(() => {

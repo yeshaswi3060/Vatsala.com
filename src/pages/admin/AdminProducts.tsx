@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
-import { PRODUCTS as initialProducts } from '../../utils/constants';
+// Products are now managed via Shopify Admin panel
 import { formatPrice } from '../../utils/constants';
 import '../../styles/pages/admin/AdminProducts.css';
 
@@ -41,31 +41,8 @@ const AdminProducts = () => {
         }
     };
 
-    // Seed Database with initial products
-    const seedDatabase = async () => {
-        if (!window.confirm('This will add all default products to the database. Continue?')) return;
-
-        setLoading(true);
-        try {
-            const batch = writeBatch(db);
-            initialProducts.forEach(product => {
-                const docRef = doc(collection(db, 'products'));
-                batch.set(docRef, {
-                    ...product,
-                    isHidden: false,
-                    createdAt: new Date()
-                });
-            });
-            await batch.commit();
-            await fetchProducts();
-            alert('Database seeded successfully!');
-        } catch (error) {
-            console.error('Error seeding database:', error);
-            alert('Failed to seed database');
-        } finally {
-            setLoading(false);
-        }
-    };
+    // Products are now managed via Shopify Admin panel
+    // The seed function has been removed since products come from Shopify
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -162,9 +139,9 @@ const AdminProducts = () => {
                 <h1>Product Management</h1>
                 <div className="header-actions">
                     {products.length === 0 && (
-                        <button onClick={seedDatabase} className="btn btn-primary seed-btn">
-                            📥 Seed Database with Products
-                        </button>
+                        <p style={{ color: '#888', fontSize: '0.9rem' }}>
+                            Products are managed in your Shopify Admin panel
+                        </p>
                     )}
                     <button
                         onClick={() => {

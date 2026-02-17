@@ -1,23 +1,77 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useToast } from '../contexts/ToastContext';
 import ProductCard from '../components/ProductCard';
-import { PRODUCTS, formatPrice } from '../utils/constants';
+import { shopifyToProduct, formatPrice, type Product } from '../utils/constants';
+import { fetchProductByHandle, fetchAllProducts } from '../lib/shopify';
 import '../styles/pages/ProductDetail.css';
 
 const ProductDetail = () => {
-    const { id } = useParams();
+    const { id: handle } = useParams();
     const { addToCart } = useCart();
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const { showToast } = useToast();
-    const product = PRODUCTS.find(p => p.id === id);
+
+    const [product, setProduct] = useState<Product | null>(null);
+    const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedColor, setSelectedColor] = useState('');
     const [quantity, setQuantity] = useState(1);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-    if (!product) {
+    useEffect(() => {
+        if (!handle) return;
+
+        setLoading(true);
+        setError(null);
+        setSelectedSize('');
+        setSelectedColor('');
+        setQuantity(1);
+        setSelectedImageIndex(0);
+
+        fetchProductByHandle(handle)
+            .then((shopifyProduct) => {
+                if (!shopifyProduct) {
+                    setError('Product not found');
+                    setLoading(false);
+                    return;
+                }
+
+                const mapped = shopifyToProduct(shopifyProduct);
+                setProduct(mapped);
+                setLoading(false);
+
+                // Fetch related products
+                fetchAllProducts(20).then((allProducts) => {
+                    const allMapped = allProducts.map(shopifyToProduct);
+                    const related = allMapped
+                        .filter(p => p.category === mapped.category && p.id !== mapped.id)
+                        .slice(0, 3);
+                    setRelatedProducts(related);
+                });
+            })
+            .catch((err) => {
+                console.error('Failed to fetch product:', err);
+                setError(err.message || 'Failed to load product');
+                setLoading(false);
+            });
+    }, [handle]);
+
+    if (loading) {
+        return (
+            <div className="product-detail-page">
+                <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
+                    <div className="loading-spinner">Loading product...</div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error || !product) {
         return (
             <div className="product-not-found">
                 <div className="container">
@@ -28,10 +82,6 @@ const ProductDetail = () => {
             </div>
         );
     }
-
-    const relatedProducts = PRODUCTS
-        .filter(p => p.category === product.category && p.id !== product.id)
-        .slice(0, 3);
 
     const handleAddToCart = () => {
         if (product.sizes && product.sizes.length > 0 && !selectedSize) {
@@ -63,20 +113,45 @@ const ProductDetail = () => {
         }
     };
 
+    const currentImage = product.images?.[selectedImageIndex] || product.image;
+
     return (
         <div className="product-detail-page">
             <div className="product-detail section">
                 <div className="container">
                     <div className="product-detail-grid">
                         <div className="product-image-section">
-                            <div
-                                className="product-main-image"
-                                style={{
-                                    background: getGradientForCategory(product.category)
-                                }}
-                            >
-                                <span className="product-image-text">{product.category}</span>
-                            </div>
+                            {currentImage ? (
+                                <img
+                                    className="product-main-image"
+                                    src={currentImage}
+                                    alt={product.name}
+                                />
+                            ) : (
+                                <div
+                                    className="product-main-image"
+                                    style={{
+                                        background: getGradientForCategory(product.category)
+                                    }}
+                                >
+                                    <span className="product-image-text">{product.category}</span>
+                                </div>
+                            )}
+
+                            {/* Thumbnail gallery */}
+                            {product.images && product.images.length > 1 && (
+                                <div className="product-thumbnails">
+                                    {product.images.map((img, index) => (
+                                        <button
+                                            key={index}
+                                            className={`thumbnail-btn ${selectedImageIndex === index ? 'active' : ''}`}
+                                            onClick={() => setSelectedImageIndex(index)}
+                                        >
+                                            <img src={img} alt={`${product.name} view ${index + 1}`} />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="product-info-section">
@@ -203,13 +278,13 @@ const ProductDetail = () => {
 };
 
 const getGradientForCategory = (category: string): string => {
-    const gradients = {
+    const gradients: Record<string, string> = {
         'Sarees': 'linear-gradient(135deg, #C71585 0%, #FF1493 50%, #FFD700 100%)',
         'Lehengas': 'linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FFD700 100%)',
         'Suits': 'linear-gradient(135deg, #4B0082 0%, #9370DB 50%, #FFB6C1 100%)',
         'Kurtis': 'linear-gradient(135deg, #FF6347 0%, #FF8C00 50%, #FFD700 100%)'
     };
-    return gradients[category as keyof typeof gradients] || gradients['Sarees'];
+    return gradients[category] || gradients['Sarees'];
 };
 
 export default ProductDetail;

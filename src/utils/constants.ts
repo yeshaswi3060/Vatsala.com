@@ -1,119 +1,78 @@
 // Product data types and constants
+import type { ShopifyProduct } from '../lib/shopify';
 
 export interface Product {
     id: string;
+    handle: string;
     name: string;
-    category: 'Sarees' | 'Lehengas' | 'Suits' | 'Kurtis';
+    category: string;
     price: number;
     originalPrice?: number;
     image: string;
+    images: string[];
     badge?: 'NEW' | 'BESTSELLER' | 'SALE';
     description: string;
     fabric?: string;
     colors?: string[];
     sizes?: string[];
+    // Shopify variant data for checkout
+    variantId?: string;
+    variants?: { id: string; title: string; availableForSale: boolean; price: number; compareAtPrice?: number; options: { name: string; value: string }[] }[];
 }
 
-export const PRODUCTS: Product[] = [
-    {
-        id: '1',
-        name: 'Kanjivaram Silk Saree',
-        category: 'Sarees',
-        price: 12999,
-        originalPrice: 15999,
-        image: '/kanjivaram-silk-saree.png',
-        badge: 'BESTSELLER',
-        description: 'Exquisite Kanjivaram silk saree with traditional gold zari work and intricate motifs',
-        fabric: 'Pure Silk',
-        colors: ['Maroon', 'Gold'],
-        sizes: ['Free Size']
-    },
-    {
-        id: '2',
-        name: 'Designer Bridal Lehenga',
-        category: 'Lehengas',
-        price: 24999,
-        originalPrice: 29999,
-        image: '/product-lehenga-1.jpg',
-        badge: 'NEW',
-        description: 'Stunning bridal lehenga with heavy embroidery and embellishments',
-        fabric: 'Silk & Velvet',
-        colors: ['Red', 'Gold'],
-        sizes: ['S', 'M', 'L', 'XL']
-    },
-    {
-        id: '3',
-        name: 'Anarkali Suit Set',
-        category: 'Suits',
-        price: 4999,
-        image: '/product-suit-1.jpg',
-        description: 'Elegant anarkali suit with beautiful embroidery and dupatta',
-        fabric: 'Georgette',
-        colors: ['Pink', 'Blue', 'Green'],
-        sizes: ['S', 'M', 'L', 'XL']
-    },
-    {
-        id: '4',
-        name: 'Banarasi Silk Saree',
-        category: 'Sarees',
-        price: 8999,
-        image: '/product-saree-2.jpg',
-        badge: 'BESTSELLER',
-        description: 'Traditional Banarasi silk saree with classic patterns',
-        fabric: 'Banarasi Silk',
-        colors: ['Royal Blue', 'Gold'],
-        sizes: ['Free Size']
-    },
-    {
-        id: '5',
-        name: 'Party Wear Lehenga',
-        category: 'Lehengas',
-        price: 15999,
-        image: '/product-lehenga-2.jpg',
-        description: 'Contemporary lehenga perfect for parties and celebrations',
-        fabric: 'Net & Silk',
-        colors: ['Peach', 'Gold'],
-        sizes: ['S', 'M', 'L', 'XL']
-    },
-    {
-        id: '6',
-        name: 'Cotton Kurti',
-        category: 'Kurtis',
-        price: 1499,
-        image: '/cotton-kurti.png',
-        badge: 'NEW',
-        description: 'Comfortable cotton kurti for everyday wear',
-        fabric: 'Pure Cotton',
-        colors: ['White', 'Yellow', 'Pink'],
-        sizes: ['S', 'M', 'L', 'XL', 'XXL']
-    },
-    {
-        id: '7',
-        name: 'Chanderi Silk Saree',
-        category: 'Sarees',
-        price: 6999,
-        image: '/chanderi-silk-saree.png',
-        description: 'Lightweight Chanderi silk saree with elegant design',
-        fabric: 'Chanderi Silk',
-        colors: ['Mint Green', 'Gold'],
-        sizes: ['Free Size']
-    },
-    {
-        id: '8',
-        name: 'Palazzo Suit Set',
-        category: 'Suits',
-        price: 3999,
-        image: '/palazzo-suit-set.png',
-        badge: 'SALE',
-        description: 'Trendy palazzo suit set with modern prints',
-        fabric: 'Rayon',
-        colors: ['Multi'],
-        sizes: ['S', 'M', 'L', 'XL']
-    }
-];
+/**
+ * Convert a Shopify product to the local Product format.
+ * This lets us keep CartContext, WishlistContext, and ProductCard working unchanged.
+ */
+export function shopifyToProduct(sp: ShopifyProduct): Product {
+    const price = parseFloat(sp.priceRange.minVariantPrice.amount);
+    const compareAt = parseFloat(sp.compareAtPriceRange?.maxVariantPrice?.amount || '0');
+    const hasDiscount = compareAt > price;
+
+    // Extract size/color options from Shopify variants
+    const sizeOption = sp.options.find(o => o.name.toLowerCase() === 'size');
+    const colorOption = sp.options.find(o => o.name.toLowerCase() === 'color' || o.name.toLowerCase() === 'colour');
+
+    // Determine badge from tags
+    let badge: Product['badge'] = undefined;
+    const tags = sp.tags.map(t => t.toLowerCase());
+    if (tags.includes('new')) badge = 'NEW';
+    else if (tags.includes('bestseller') || tags.includes('best-seller')) badge = 'BESTSELLER';
+    else if (hasDiscount || tags.includes('sale')) badge = 'SALE';
+
+    // Find fabric in tags or metafields
+    const fabricTag = sp.tags.find(t => t.toLowerCase().startsWith('fabric:'));
+    const fabric = fabricTag ? fabricTag.split(':')[1].trim() : undefined;
+
+    return {
+        id: sp.id,
+        handle: sp.handle,
+        name: sp.title,
+        category: sp.productType || 'Uncategorized',
+        price,
+        originalPrice: hasDiscount ? compareAt : undefined,
+        image: sp.images[0]?.url || '',
+        images: sp.images.map(img => img.url),
+        badge,
+        description: sp.description,
+        fabric,
+        colors: colorOption?.values,
+        sizes: sizeOption?.values,
+        variantId: sp.variants[0]?.id,
+        variants: sp.variants.map(v => ({
+            id: v.id,
+            title: v.title,
+            availableForSale: v.availableForSale,
+            price: parseFloat(v.price.amount),
+            compareAtPrice: v.compareAtPrice ? parseFloat(v.compareAtPrice.amount) : undefined,
+            options: v.selectedOptions,
+        })),
+    };
+}
 
 export const formatPrice = (price: number): string => {
     return `₹${price.toLocaleString('en-IN')}`;
 };
 
+// Default categories — can be overridden by Shopify collections
 export const CATEGORIES = ['All', 'Sarees', 'Lehengas', 'Suits', 'Kurtis'] as const;

@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
-import { CATEGORIES, PRODUCTS } from '../utils/constants';
+import { CATEGORIES, shopifyToProduct, type Product } from '../utils/constants';
+import { fetchAllProducts } from '../lib/shopify';
 import '../styles/pages/Shop.css';
 
 const Shop = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'All');
     const [sortBy, setSortBy] = useState('featured');
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const category = searchParams.get('category');
@@ -19,13 +21,20 @@ const Shop = () => {
     }, [searchParams]);
 
     useEffect(() => {
-        // Use local data for guaranteed visibility
         setLoading(true);
-        // Simulate a small delay for better UX
-        setTimeout(() => {
-            setProducts(PRODUCTS);
-            setLoading(false);
-        }, 300);
+        setError(null);
+
+        fetchAllProducts(50)
+            .then((shopifyProducts) => {
+                const mapped = shopifyProducts.map(shopifyToProduct);
+                setProducts(mapped);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error('Failed to fetch products:', err);
+                setError(err.message || 'Failed to load products');
+                setLoading(false);
+            });
     }, []);
 
     const handleCategoryChange = (category: string) => {
@@ -60,6 +69,27 @@ const Shop = () => {
                 </div>
                 <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
                     <div className="loading-spinner">Loading products...</div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="shop-page">
+                <div className="shop-hero">
+                    <div className="container">
+                        <h1>Shop Traditional Wear</h1>
+                        <p>Discover our complete collection of authentic Indian clothing</p>
+                    </div>
+                </div>
+                <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
+                    <div className="error-message">
+                        <p>⚠️ {error}</p>
+                        <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', opacity: 0.7 }}>
+                            Please check that your Shopify store domain is configured in the .env file.
+                        </p>
+                    </div>
                 </div>
             </div>
         );
