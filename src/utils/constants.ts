@@ -18,6 +18,7 @@ export interface Product {
     // Shopify variant data for checkout
     variantId?: string;
     variants?: { id: string; title: string; availableForSale: boolean; price: number; compareAtPrice?: number; options: { name: string; value: string }[] }[];
+    collections?: string[];
 }
 
 /**
@@ -44,11 +45,37 @@ export function shopifyToProduct(sp: ShopifyProduct): Product {
     const fabricTag = sp.tags.find(t => t.toLowerCase().startsWith('fabric:'));
     const fabric = fabricTag ? fabricTag.split(':')[1].trim() : undefined;
 
+    // Determine category: Collection (Priority) -> Product Type -> First Collection -> 'Uncategorized'
+    const knownCategories = ['Lehengas', 'Suits', 'Blouses', 'Kurtis', 'Gowns', 'Sarees'];
+
+    // 1. Try to find a known category in collections (Best Source)
+    // This fixes the issue where ProductType is wrong (e.g. all 'Lehenga') but Collection is correct
+    let category = '';
+    if (sp.collections && sp.collections.length > 0) {
+        const matchedCategory = knownCategories.find(k =>
+            sp.collections.some(c => c.title.toLowerCase().includes(k.toLowerCase()))
+        );
+        if (matchedCategory) {
+            category = matchedCategory;
+        }
+    }
+
+    // 2. Fallback to Product Type (if likely valid)
+    // Only use if we didn't match a collection and it's not a generic/wrong type
+    if (!category && sp.productType) {
+        category = sp.productType;
+    }
+
+    // 3. Fallback to first collection if still empty
+    if (!category && sp.collections && sp.collections.length > 0) {
+        category = sp.collections[0].title;
+    }
+
     return {
         id: sp.id,
         handle: sp.handle,
         name: sp.title,
-        category: sp.productType || 'Uncategorized',
+        category: category || 'Uncategorized',
         price,
         originalPrice: hasDiscount ? compareAt : undefined,
         image: sp.images[0]?.url || '',
@@ -67,6 +94,7 @@ export function shopifyToProduct(sp: ShopifyProduct): Product {
             compareAtPrice: v.compareAtPrice ? parseFloat(v.compareAtPrice.amount) : undefined,
             options: v.selectedOptions,
         })),
+        collections: sp.collections?.map(c => c.title) || [],
     };
 }
 
@@ -75,4 +103,4 @@ export const formatPrice = (price: number): string => {
 };
 
 // Default categories — can be overridden by Shopify collections
-export const CATEGORIES = ['All', 'Sarees', 'Lehengas', 'Suits', 'Kurtis'] as const;
+export const CATEGORIES = ['All', 'Sarees', 'Lehengas', 'Suits', 'Kurtis', 'Blouses', 'Gowns'] as const;

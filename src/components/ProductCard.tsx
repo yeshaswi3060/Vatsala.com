@@ -7,6 +7,10 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+    const discountPercentage = product.originalPrice
+        ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+        : 0;
+
     return (
         <Link to={`/product/${product.handle}`} className="product-card">
             <div className="product-image-wrapper">
@@ -27,19 +31,30 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         <span className="product-image-text">{product.category}</span>
                     </div>
                 )}
-                {product.badge && (
+                {/* Priority: Custom Badge > Discount Badge */}
+                {product.badge ? (
                     <span className={`product-badge badge-${product.badge.toLowerCase()}`}>
                         {product.badge}
                     </span>
-                )}
+                ) : discountPercentage > 0 ? (
+                    <span className="product-badge badge-sale">
+                        {discountPercentage}% Off
+                    </span>
+                ) : null}
             </div>
             <div className="product-info">
                 <p className="product-category">{product.category}</p>
                 <h3 className="product-name">{product.name}</h3>
                 <div className="product-pricing">
-                    <span className="product-price">{formatPrice(product.price)}</span>
                     {product.originalPrice && (
-                        <span className="product-original-price">{formatPrice(product.originalPrice)}</span>
+                        <>
+                            <span className="mrp-label">M.R.P:</span>
+                            <span className="product-original-price">{formatPrice(product.originalPrice)}</span>
+                        </>
+                    )}
+                    <span className="product-price">{formatPrice(product.price)}</span>
+                    {discountPercentage > 0 && (
+                        <span className="product-discount-text">{discountPercentage}% OFF</span>
                     )}
                 </div>
             </div>

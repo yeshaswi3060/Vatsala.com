@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import ProductRow from '../components/ProductRow';
 import ProductCard from '../components/ProductCard';
 import Testimonials from '../components/Testimonials';
 import Newsletter from '../components/Newsletter';
@@ -18,7 +19,7 @@ const Home = () => {
     // ProductCard expects `product` prop of type `Product` (internal)
     // `useShopifyProducts` returns `ShopifyProduct[]`
     // We need to map them.
-    const featuredProducts = products.slice(0, 4).map(p => shopifyToProduct(p));
+    const featuredProducts = products.slice(0, 5).map(p => shopifyToProduct(p));
 
     return (
         <div className="home-page">
@@ -76,7 +77,8 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Featured Products */}
+
+            {/* Featured Products (Trending Now) */}
             <section className="featured-products section">
                 <div className="container">
                     <div className="section-header">
@@ -89,7 +91,7 @@ const Home = () => {
                     ) : error ? (
                         <div style={{ textAlign: 'center', color: '#ff6b6b' }}>{error}</div>
                     ) : (
-                        <div className="products-grid">
+                        <div className="products-grid trending-grid">
                             {featuredProducts.length > 0 ? featuredProducts.map((product) => (
                                 <ProductCard key={product.id} product={product} />
                             )) : (
@@ -104,10 +106,53 @@ const Home = () => {
                 </div>
             </section>
 
+            {/* Recent Additions by Category */}
+            {!loading && !error && (
+                <>
+                    <ProductRow
+                        title="Lehengas"
+                        products={products.filter(p => {
+                            const type = p.productType?.toLowerCase() || '';
+                            const collections = p.collections?.map(c => c.title.toLowerCase()) || [];
+                            return type.includes('lehenga') || type.includes('lengha') || collections.some(c => c.includes('lehenga') || c.includes('lengha'));
+                        }).slice(0, 8).map(p => shopifyToProduct(p))}
+                        viewAllLink="/shop?category=Lehengas"
+                    />
+                    <ProductRow
+                        title="Blouses"
+                        products={products.filter(p => {
+                            const type = p.productType?.toLowerCase() || '';
+                            const collections = p.collections?.map(c => c.title.toLowerCase()) || [];
+                            return type.includes('blouse') || collections.some(c => c.includes('blouse'));
+                        }).slice(0, 8).map(p => shopifyToProduct(p))}
+                        viewAllLink="/shop?category=Blouses"
+                    />
+                    <ProductRow
+                        title="Suits"
+                        products={products.filter(p => {
+                            const type = p.productType?.toLowerCase() || '';
+                            const collections = p.collections?.map(c => c.title.toLowerCase()) || [];
+                            return type.includes('suit') || collections.some(c => c.includes('suit'));
+                        }).slice(0, 8).map(p => shopifyToProduct(p))}
+                        viewAllLink="/shop?category=Suits"
+                    />
+                    <ProductRow
+                        title="Sarees"
+                        products={products.filter(p => {
+                            const type = p.productType?.toLowerCase() || '';
+                            const collections = p.collections?.map(c => c.title.toLowerCase()) || [];
+                            return type.includes('saree') || collections.some(c => c.includes('saree'));
+                        }).slice(0, 8).map(p => shopifyToProduct(p))}
+                        viewAllLink="/shop?category=Sarees"
+                    />
+                </>
+            )}
+
             {/* Testimonials */}
             <Testimonials />
 
             {/* Newsletter */}
+
             <Newsletter />
 
             {/* Popup */}

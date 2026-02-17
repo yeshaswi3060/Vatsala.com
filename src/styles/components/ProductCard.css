@@ -1,13 +1,18 @@
 /* ProductCard Styles */
 
 .product-card {
+    position: relative;
     background: var(--color-bg-light);
-    border-radius: var(--radius-md);
+    /* Fixed invisible text issue */
+    border: 1px solid var(--color-border);
+    /* border-radius: var(--radius-md); -- Removed for square look */
+    /* box-shadow: var(--shadow-sm); -- Removed for cleaner look, or keep if user wants */
     overflow: hidden;
-    transition: all var(--transition-medium);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     text-decoration: none;
-    display: block;
 }
 
 .product-card:hover {
@@ -49,29 +54,38 @@
 
 .product-badge {
     position: absolute;
-    top: var(--spacing-sm);
-    right: var(--spacing-sm);
+    top: 10px;
+    left: 10px;
+    /* Moved slightly inside for better look */
     padding: 0.5rem 1rem;
-    border-radius: var(--radius-full);
+    background: rgba(0, 0, 0, 0.85);
+    /* Dark background */
+    border: 1px solid var(--color-gold);
+    /* Gold Border */
+    color: var(--color-gold);
+    /* Gold Text */
     font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 1px;
+    font-weight: 800;
     text-transform: uppercase;
+    z-index: 10;
+    border-radius: 2px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
 }
 
 .badge-new {
-    background: linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%);
-    color: var(--color-bg-dark);
+    border-color: #00C9FF;
+    color: #00C9FF;
 }
 
 .badge-bestseller {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    color: var(--color-bg-dark);
+    border-color: #FFA500;
+    color: #FFA500;
 }
 
 .badge-sale {
-    background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
-    color: white;
+    border-color: var(--color-gold);
+    color: var(--color-gold);
 }
 
 .product-info {
@@ -79,7 +93,7 @@
 }
 
 .product-category {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -87,30 +101,52 @@
 }
 
 .product-name {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 600;
     margin-bottom: var(--spacing-sm);
     color: var(--color-text-primary);
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    /* Switch to body font for cleaner look, or keep display */
+    height: 2.4em;
+    /* Limit height for uniform cards */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
+
 
 .product-pricing {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    font-size: 0.95rem;
+}
+
+.mrp-label {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
 }
 
 .product-price {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #FFD700 0%, #FF69B4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-text-primary);
 }
 
 .product-original-price {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: var(--color-text-muted);
     text-decoration: line-through;
+    margin-right: 0.2rem;
+}
+
+.product-discount-text {
+    font-size: 0.85rem;
+    color: var(--color-gold);
+    /* Gold color for discount */
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }

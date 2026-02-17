@@ -77,6 +77,7 @@ export interface ShopifyProduct {
         maxVariantPrice: ShopifyPrice;
     };
     options: { name: string; values: string[] }[];
+    collections: { title: string; handle: string }[];
 }
 
 export interface ShopifyCollection {
@@ -110,6 +111,14 @@ const PRODUCT_FRAGMENT = `
         compareAtPriceRange {
             minVariantPrice { amount currencyCode }
             maxVariantPrice { amount currencyCode }
+        }
+        collections(first: 5) {
+            edges {
+                node {
+                    title
+                    handle
+                }
+            }
         }
         images(first: 10) {
             edges {
@@ -307,6 +316,7 @@ interface RawShopifyProduct {
     };
     images: { edges: { node: ShopifyImage }[] };
     variants: { edges: { node: ShopifyVariant }[] };
+    collections: { edges: { node: { title: string; handle: string } }[] };
 }
 
 function normalizeProduct(raw: RawShopifyProduct): ShopifyProduct {
@@ -314,5 +324,6 @@ function normalizeProduct(raw: RawShopifyProduct): ShopifyProduct {
         ...raw,
         images: raw.images.edges.map((e) => e.node),
         variants: raw.variants.edges.map((e) => e.node),
+        collections: raw.collections.edges.map((e) => e.node),
     };
 }
