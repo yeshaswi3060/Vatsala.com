@@ -291,8 +291,7 @@
 /* Responsive Breakpoints */
 @media (max-width: 900px) {
     .header-top {
-        display: block;
-        padding: 0.5rem;
+        display: none !important;
     }
 
     .desktop-only {
