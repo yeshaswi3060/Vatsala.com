@@ -8,7 +8,7 @@
 
 .shop-hero {
     background: linear-gradient(135deg, #8B008B 0%, #FF1493 50%, #FFD700 100%);
-    padding: var(--spacing-2xl) 0;
+    padding: var(--spacing-lg) 0;
     text-align: center;
     color: white;
 }
@@ -27,6 +27,7 @@
 .shop-content {
     background: var(--color-bg-dark);
     overflow-x: hidden;
+    padding-top: 1.5rem !important;
 }
 
 .shop-controls {
