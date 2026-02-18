@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import '../styles/components/HeroGrid.css';
+import TrustBadges from './TrustBadges';
 
 const HeroGrid = () => {
     return (
@@ -24,17 +25,9 @@ const HeroGrid = () => {
                     {/* Side Banners (Right - 33%) */}
                     <div className="hero-side-banners">
                         {/* Top Side Banner */}
-                        <div className="side-banner">
-                            <img
-                                src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&auto=format&fit=crop&q=80"
-                                alt="Side Offer 1"
-                                className="banner-img"
-                            />
-                            <div className="side-content">
-                                <h3>Silk Sarees</h3>
-                                <span>Flat 30% Off</span>
-                            </div>
-                            <Link to="/shop?category=Sarees" className="cover-link"></Link>
+                        {/* Trust Badges Section (Replaces Top Side Banner) */}
+                        <div className="side-banner trust-banner-wrapper">
+                            <TrustBadges />
                         </div>
 
                         {/* Bottom Side Banner */}

@@ -1,0 +1,102 @@
+/* TrustBadges.css */
+.trust-badges-container {
+    background: var(--color-bg-light);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.trust-badges-scroll {
+    display: flex;
+    flex-direction: column;
+    animation: scrollUp 12s linear infinite;
+    padding: 0;
+}
+
+.trust-badges-container:hover .trust-badges-scroll {
+    animation-play-state: paused;
+}
+
+.trust-badge-item {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 0.8rem;
+    gap: 0.6rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    transition: background 0.3s ease;
+    white-space: nowrap;
+}
+
+.trust-badge-item:hover {
+    background: linear-gradient(to right, transparent, rgba(255, 215, 0, 0.05));
+}
+
+.badge-icon {
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background: rgba(165, 42, 42, 0.05);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.badge-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.badge-content h4 {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-primary);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.badge-content p {
+    margin: 0.1rem 0 0 0;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    line-height: 1.3;
+}
+
+/* Gradient Overlays for smooth fade at edges */
+.trust-overlay-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(to bottom, var(--color-bg-light), transparent);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.trust-overlay-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(to top, var(--color-bg-light), transparent);
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes scrollUp {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-50%);
+    }
+}

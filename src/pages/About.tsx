@@ -42,7 +42,7 @@ const About = () => {
 
                     <div className="values-grid">
                         <div className="value-card">
-                            <div className="value-icon">🎨</div>
+
                             <h3>Authentic Craftsmanship</h3>
                             <p>
                                 We work directly with skilled artisans across India, ensuring each piece maintains the
@@ -51,7 +51,7 @@ const About = () => {
                         </div>
 
                         <div className="value-card">
-                            <div className="value-icon">✨</div>
+
                             <h3>Premium Quality</h3>
                             <p>
                                 Only the finest fabrics and materials make it into our collection. We never compromise
@@ -60,7 +60,7 @@ const About = () => {
                         </div>
 
                         <div className="value-card">
-                            <div className="value-icon">🌿</div>
+
                             <h3>Sustainable Practices</h3>
                             <p>
                                 We're committed to sustainable and ethical fashion, supporting local communities and
@@ -69,7 +69,7 @@ const About = () => {
                         </div>
 
                         <div className="value-card">
-                            <div className="value-icon">💝</div>
+
                             <h3>Customer First</h3>
                             <p>
                                 Your satisfaction is our priority. We provide personalized service to help you find

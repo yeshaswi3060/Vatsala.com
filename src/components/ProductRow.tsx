@@ -13,12 +13,14 @@ const ProductRow = ({ title, products, viewAllLink }: ProductRowProps) => {
     if (products.length === 0) return null;
 
     return (
-        <section className="product-row-section">
-            <div className="section-header">
-                <h2 className="section-title">{title}</h2>
-                <Link to={viewAllLink} className="view-all-link">View All</Link>
+        <section className="product-row-section section">
+            <div className="container">
+                <div className="section-header">
+                    <h2 className="section-title">{title}</h2>
+                    <Link to={viewAllLink} className="view-all-link">View All</Link>
+                </div>
+                <ProductSlider products={products} />
             </div>
-            <ProductSlider products={products} />
         </section>
     );
 };

@@ -1,33 +1,43 @@
-/* Header.css - Malyam Style Dark Theme */
+/* Header.css - Heritage Luxury Theme */
 
 .header {
     position: sticky;
     top: 0;
     z-index: 1000;
     background-color: var(--color-bg-dark);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* Cream Background */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
 }
 
 .header.scrolled {
-    background: rgba(10, 10, 15, 0.95);
+    background: rgba(253, 251, 247, 0.95);
+    /* Translucent Cream */
     backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* Row 1: Top Bar */
 .header-top {
-    background: var(--color-gold);
-    color: #000;
+    background: var(--color-primary);
+    /* Deep Maroon */
+    color: var(--color-text-inverse);
+    /* White Text */
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 500;
     text-align: center;
     padding: 0.5rem 0;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
     overflow: hidden;
     max-height: 40px;
-    /* Explicit height for animation */
+}
+
+.header-top p {
+    color: white !important;
+    /* Force white text */
+    margin: 0;
 }
 
 /* Hide Top Bar on Scroll */
@@ -40,16 +50,14 @@
 /* Row 2: Main Header */
 .header-main {
     padding: 1rem 0;
-    /* Reduced initial padding */
     background: var(--color-bg-dark);
+    /* Cream */
     transition: all 0.3s ease;
 }
 
 .header.scrolled .header-main {
     padding: 0.5rem 0;
-    /* Slimmer on scroll */
     background: transparent;
-    /* Adopt header bg */
 }
 
 .header-main-content {
@@ -67,71 +75,65 @@
 
 .logo-main {
     font-family: var(--font-display);
-    font-size: 1.8rem;
-    /* Slightly smaller initial */
+    font-size: 2rem;
     font-weight: 700;
-    background: var(--gradient-gold);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--color-primary);
+    /* Deep Maroon */
+    background: none;
+    -webkit-text-fill-color: initial;
     transition: font-size 0.3s ease;
+    letter-spacing: -0.5px;
 }
 
 .header.scrolled .logo-main {
-    font-size: 1.5rem;
-    /* Smaller on scroll */
-}
-
-.logo-sub {
-    font-size: 0.65rem;
-    color: var(--color-text-muted);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: opacity 0.3s ease;
-}
-
-.header.scrolled .logo-sub {
-    display: none;
-    /* Hide subtitle on scroll */
+    font-size: 1.6rem;
 }
 
 /* Search Bar */
 .header-search-wrapper {
     flex: 1;
     max-width: none;
-    /* remove limit to fill space */
     margin: 0 2rem;
-    /* Add some breathing room around it */
     transition: all 0.3s ease;
 }
 
 .header-search-form {
     display: flex;
     width: 100%;
-    /* Force form to fill the wrapper */
     background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* Subtle border */
     border-radius: var(--radius-sm);
     overflow: hidden;
     height: 50px;
-    /* Bigger search bar */
-    transition: height 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.header-search-form:focus-within {
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
 }
 
 .header-search-form input {
     flex: 1;
     border: none;
     padding: 0 1.2rem;
-    font-size: 1.1rem;
-    /* Larger text */
+    font-size: 1rem;
     outline: none;
-    color: #333;
+    color: var(--color-text-primary);
+    background: transparent;
+}
+
+.header-search-form input::placeholder {
+    color: var(--color-text-muted);
 }
 
 .header-search-form button {
-    background: #0a0a0f;
-    color: var(--color-gold);
+    background: var(--color-primary);
+    /* Deep Maroon */
+    color: white;
     border: none;
     padding: 0 1.5rem;
-    /* Wider button */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -140,8 +142,7 @@
 }
 
 .header-search-form button:hover {
-    background: var(--color-primary);
-    color: white;
+    background: var(--color-primary-dark);
 }
 
 /* Actions */
@@ -150,88 +151,78 @@
     gap: 1.5rem;
 }
 
+/* Hover Animations */
 .action-item {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
     color: var(--color-text-primary);
+    transition: all 0.3s ease;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+}
+
+.action-item:hover {
+    color: var(--color-primary);
+    background: rgba(212, 175, 55, 0.1);
+    /* Subtle Gold Background */
+    transform: translateY(-2px);
 }
 
 .icon-wrapper {
     position: relative;
-    color: var(--color-gold);
+    color: var(--color-text-primary);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.action-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-    transition: opacity 0.3s ease, width 0.3s ease;
+.action-item:hover .icon-wrapper {
+    color: var(--color-primary);
+    transform: scale(1.2);
+    /* Pop effect */
 }
 
-.action-text .label {
-    font-size: 0.7rem;
-    color: var(--color-text-muted);
-}
-
-.action-text .sub-label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: white;
-}
-
-.badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: var(--color-primary);
-    color: white;
-    font-size: 0.6rem;
-    padding: 2px 5px;
-    border-radius: 50%;
-    min-width: 16px;
-    text-align: center;
-}
-
-.header.scrolled .action-text {
-    /* Optional: Hide text labels on scroll to save space */
-    /* display: none; */
-}
-
-/* Row 3: Nav */
-.header-nav {
-    background: #050508;
-    /* Slightly darker */
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.3s ease;
-    overflow: hidden;
-    max-height: 50px;
-}
-
-/* Hide Nav on Scroll (or merge it? For now hide to "get thin") */
-/* User said "if i scrool it should go and get thike" - probably means "get like this" referring to a slim view */
-/* Standard e-com: Main header sticks. Nav might stick too on large screens. */
-/* I will hide Nav to minimize thickness as requested. */
-.header.scrolled .header-nav {
-    max-height: 0;
-    opacity: 0;
-    border: none;
-}
+/* ... existing code ... */
 
 .main-nav {
     display: flex;
-    gap: 2rem;
+    justify-content: center;
+    gap: 2.5rem;
+    align-items: center;
+    width: 100%;
 }
 
 .main-nav a {
-    color: #ccc;
+    color: var(--color-text-primary);
     text-decoration: none;
     font-size: 0.9rem;
-    font-weight: 600;
-    padding: 0.8rem 0;
-    border-bottom: 2px solid transparent;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+    /* For Pseudo-element */
     transition: all 0.3s;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.main-nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--color-gold);
+    transition: all 0.3s ease-in-out;
+    transform: translateX(-50%);
+}
+
+.main-nav a:hover {
+    color: var(--color-primary);
+}
+
+.main-nav a:hover::after {
+    width: 100%;
 }
 
 /* Mobile Toggle */
@@ -239,7 +230,7 @@
     display: none;
     background: none;
     border: none;
-    color: white;
+    color: var(--color-text-primary);
     cursor: pointer;
 }
 
@@ -252,7 +243,6 @@
 .mobile-menu {
     position: fixed;
     top: 60px;
-    /* Below header */
     left: 0;
     width: 100%;
     height: calc(100vh - 60px);
@@ -276,9 +266,9 @@
 
 .mobile-nav a {
     font-size: 1.2rem;
-    color: white;
+    color: var(--color-text-primary);
     text-decoration: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding-bottom: 0.5rem;
 }
 
@@ -286,7 +276,7 @@
     width: 100%;
     padding: 0.8rem;
     border-radius: var(--radius-sm);
-    border: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .mobile-search button {
@@ -296,14 +286,12 @@
 /* Mobile Search Row */
 .mobile-search-row {
     display: none;
-    /* Hidden on Desktop */
 }
 
 /* Responsive Breakpoints */
 @media (max-width: 900px) {
     .header-top {
         display: block;
-        /* Show Top Bar on Mobile */
         padding: 0.5rem;
     }
 
@@ -323,20 +311,10 @@
 
     .logo-main {
         font-size: 1.5rem;
-        /* Readable size */
-        background: none;
-        -webkit-text-fill-color: var(--color-gold);
-        color: var(--color-gold);
-    }
-
-    .logo-sub {
-        display: none;
-        /* Simplify logo for mobile */
     }
 
     .header-nav {
         display: none;
-        /* Hide Desktop Nav */
     }
 
     .mobile-search-row {
@@ -346,10 +324,6 @@
 
     .mobile-search-row .header-search-form {
         height: 45px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
     }
-}
-
-@media (max-width: 768px) {
-    /* ... existing tweaks can be minimal now as 900px handles most ... */
 }

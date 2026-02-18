@@ -35,7 +35,7 @@ const Header = () => {
             {/* Row 1: Top Bar (Visible on Mobile too as per request) */}
             <div className="header-top">
                 <div className="container">
-                    <p style={{ color: 'black', fontWeight: 'bold' }}>✨ Free Gift on ₹3000+ Orders! | Flat 10% Off: WELCOME10</p>
+                    <p style={{ color: 'black', fontWeight: 'bold' }}>Free Gift on ₹3000+ Orders! | Flat 10% Off: WELCOME10</p>
                 </div>
             </div>
 

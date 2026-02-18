@@ -3,33 +3,56 @@
    =================================== */
 
 :root {
-  /* Traditional Indian Color Palette - Dark Theme */
-  --color-primary: hsl(320, 70%, 45%);
-  --color-primary-light: hsl(320, 70%, 55%);
-  --color-primary-dark: hsl(320, 70%, 35%);
+  /* Heritage Luxury Theme - Cream, Maroon, Gold */
 
-  --color-accent: hsl(340, 85%, 55%);
-  --color-accent-light: hsl(340, 85%, 65%);
+  /* Primary Colors */
+  --color-primary: hsl(345, 80%, 25%);
+  /* Deep Maroon/Burgundy */
+  --color-primary-light: hsl(345, 70%, 35%);
+  /* Lighter Maroon */
+  --color-primary-dark: hsl(345, 90%, 15%);
+  /* Darker Maroon */
 
-  --color-gold: hsl(45, 90%, 60%);
-  --color-gold-light: hsl(45, 90%, 70%);
+  --color-accent: hsl(35, 90%, 55%);
+  /* Rich Gold/Amber as accent */
+  --color-accent-light: hsl(35, 90%, 65%);
 
-  /* Neutrals - Dark Theme */
-  --color-bg-dark: hsl(240, 15%, 8%);
-  --color-bg-medium: hsl(240, 10%, 12%);
-  --color-bg-light: hsl(240, 8%, 18%);
-  --color-text-primary: hsl(0, 0%, 98%);
-  --color-text-secondary: hsl(0, 0%, 75%);
-  --color-text-muted: hsl(0, 0%, 55%);
+  /* Gold Tones */
+  --color-gold: hsl(45, 100%, 40%);
+  /* Deep Metallic Gold */
+  --color-gold-light: hsl(45, 90%, 60%);
+  /* Bright Gold */
+  --color-gold-dark: hsl(45, 100%, 30%);
+  /* Antique Gold */
+
+  /* Neutrals - Light Theme Refined */
+  --color-bg-dark: hsl(40, 20%, 98%);
+  /* Cream / Off-White (Main Background) */
+  --color-bg-medium: hsl(40, 20%, 94%);
+  /* Soft Beige (Secondary Background) */
+  --color-bg-light: hsl(0, 0%, 100%);
+  /* Pure White (Cards/Modals) */
+
+  /* Rich Text Colors */
+  --color-text-primary: hsl(30, 15%, 15%);
+  /* Deep Warm Charcoal - Softer than black */
+  --color-text-secondary: hsl(30, 10%, 40%);
+  /* Rich Brown-Grey */
+  --color-text-muted: hsl(30, 10%, 60%);
+  /* soft warm grey */
+  --color-text-inverse: hsl(40, 20%, 98%);
+  /* Cream for dark backgrounds */
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  --gradient-gold: linear-gradient(135deg, var(--color-gold) 0%, var(--color-accent) 100%);
-  --gradient-overlay: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  --gradient-gold: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 50%, var(--color-gold) 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(50, 20, 30, 0.3) 0%, rgba(50, 20, 30, 0.8) 100%);
 
   /* Typography */
   --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Clean Sans for Body */
   --font-display: 'Playfair Display', Georgia, serif;
+  /* Elegant Serif for Headings */
 
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -44,16 +67,18 @@
   --transition-medium: 0.4s ease;
   --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
-  --shadow-glow: 0 0 30px rgba(280, 70%, 45%, 0.3);
+  /* Shadows - Adjusted for Light Theme */
+  --shadow-sm: 0 2px 8px rgba(50, 20, 20, 0.05);
+  --shadow-md: 0 4px 16px rgba(50, 20, 20, 0.08);
+  --shadow-lg: 0 8px 32px rgba(50, 20, 20, 0.12);
+  --shadow-glow: 0 0 20px rgba(212, 175, 55, 0.2);
+  /* Gold Glow */
 
   /* Border Radius */
-  --radius-sm: 0.5rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
+  --radius-sm: 0.25rem;
+  /* Sharper corners for luxury feel */
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
   --radius-full: 9999px;
 }
 

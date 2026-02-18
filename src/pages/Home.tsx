@@ -100,9 +100,7 @@ const Home = () => {
                         </div>
                     )}
 
-                    <div className="view-all-cta">
-                        <Link to="/shop" className="btn btn-outline">View All Products</Link>
-                    </div>
+
                 </div>
             </section>
 
