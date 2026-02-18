@@ -112,6 +112,7 @@
 .products-count {
     color: var(--color-text-muted);
     margin-bottom: var(--spacing-md);
+    margin-top: -1.5rem;
     font-size: 0.95rem;
 }
 
