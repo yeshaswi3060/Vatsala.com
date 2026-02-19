@@ -9,7 +9,7 @@ const AdminRoute = () => {
     }
 
     if (!user || !isAdmin) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
     return <Outlet />;

@@ -1,13 +1,26 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useProfile } from '../contexts/ProfileContext';
 import { useToast } from '../contexts/ToastContext';
 import '../styles/pages/Profile.css';
 
 const Profile = () => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const { profile, updateProfile, saveShippingInfo } = useProfile();
     const { showToast } = useToast();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            showToast('Logged out successfully', 'success');
+            navigate('/login');
+        } catch (error) {
+            console.error('Logout failed', error);
+            showToast('Failed to log out', 'error');
+        }
+    };
 
     const [activeTab, setActiveTab] = useState<'personal' | 'shipping'>('personal');
 
@@ -77,6 +90,9 @@ const Profile = () => {
                     <div className="profile-header">
                         <h1>My Profile</h1>
                         <p>Manage your account settings and preferences</p>
+                        <button onClick={handleLogout} className="btn-logout">
+                            Sign Out
+                        </button>
                     </div>
 
                     <div className="profile-content">

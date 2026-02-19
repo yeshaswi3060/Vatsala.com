@@ -12,6 +12,7 @@ export interface Product {
     images: string[];
     badge?: 'NEW' | 'BESTSELLER' | 'SALE';
     description: string;
+    descriptionHtml?: string;
     fabric?: string;
     colors?: string[];
     sizes?: string[];
@@ -76,6 +77,7 @@ export function shopifyToProduct(sp: ShopifyProduct): Product {
         handle: sp.handle,
         name: sp.title,
         category: category || 'Uncategorized',
+        descriptionHtml: sp.descriptionHtml,
         price,
         originalPrice: hasDiscount ? compareAt : undefined,
         image: sp.images[0]?.url || '',
@@ -102,5 +104,4 @@ export const formatPrice = (price: number): string => {
     return `₹${price.toLocaleString('en-IN')}`;
 };
 
-// Default categories — can be overridden by Shopify collections
-export const CATEGORIES = ['All', 'Sarees', 'Lehengas', 'Suits', 'Kurtis', 'Blouses', 'Gowns'] as const;
+

@@ -27,6 +27,8 @@ import AdminRoute from './components/AdminRoute';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
+import AdminOrders from './pages/admin/AdminOrders';
+import AdminProductEdit from './pages/admin/AdminProductEdit';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminPromoCodes from './pages/admin/AdminPromoCodes';
 
@@ -105,7 +107,9 @@ const AppContent = () => {
                   <Route element={<AdminLayout />}>
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route path="/admin/products" element={<AdminProducts />} />
-                    <Route path="/admin/orders" element={<AdminDashboard />} />
+                    <Route path="/admin/products/:id" element={<AdminProductEdit />} />
+
+                    <Route path="/admin/orders" element={<AdminOrders />} />
                     <Route path="/admin/users" element={<AdminUsers />} />
                     <Route path="/admin/promocodes" element={<AdminPromoCodes />} />
                   </Route>

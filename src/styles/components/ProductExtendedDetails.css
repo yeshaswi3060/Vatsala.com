@@ -1,0 +1,306 @@
+/* ProductExtendedDetails.css */
+
+.product-extended-details {
+    background: #ffffff;
+    /* Clean white background */
+    padding: 4rem 0;
+    font-family: var(--font-primary);
+}
+
+/* ── Tabs ── */
+.details-tabs {
+    display: flex;
+    gap: 3rem;
+    border-bottom: 2px solid #f3f4f6;
+    margin-bottom: 3rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE 10+ */
+}
+
+.details-tabs::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari/Webkit */
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 0;
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    position: relative;
+    white-space: nowrap;
+    transition: color 0.3s;
+}
+
+.tab-btn.active {
+    color: var(--color-primary);
+    /* Blue or Brand Color */
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-primary);
+}
+
+/* ── Content Animation ── */
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Feature Block (Description) ── */
+.feature-block-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.feature-title {
+    font-family: var(--font-display);
+    /* Playfair */
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-primary);
+}
+
+.feature-desc {
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 90%;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.check-icon {
+    background: #1d4ed8;
+    /* Blue check circle */
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.feature-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    /* Slight rounded or sharp if preferred */
+    background: #f0f0f0;
+}
+
+/* ── Reviews ── */
+.reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.reviews-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.reviews-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 4rem;
+}
+
+/* Rating Summary Box */
+.rating-summary-box {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.rating-big {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #1d4ed8;
+    line-height: 1;
+}
+
+.rating-stars {
+    color: #fbbf24;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+}
+
+.rating-text {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.rating-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.bar-track {
+    flex: 1;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: #1d4ed8;
+    border-radius: 3px;
+}
+
+/* Reviews Grid */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.review-card {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.reviewer-avatar {
+    width: 48px;
+    height: 48px;
+    background: #dbeafe;
+    /* Light blue */
+    color: #1e40af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+.reviewer-avatar.blue {
+    background: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.reviewer-name {
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.review-stars-small {
+    color: #fbbf24;
+    font-size: 0.9rem;
+}
+
+.review-text {
+    font-style: italic;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+/* ── Specifications ── */
+.specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.spec-item {
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-radius: 6px;
+}
+
+.spec-label {
+    display: block;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.spec-value {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-size: 1.05rem;
+}
+
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .feature-block-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-image {
+        order: -1;
+        /* Image first on mobile? Or second? Left it second for now. */
+    }
+
+    .reviews-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+}

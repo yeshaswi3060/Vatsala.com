@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
-import { CATEGORIES, shopifyToProduct, type Product } from '../utils/constants';
-import { fetchAllProducts } from '../lib/shopify';
+import { shopifyToProduct, type Product } from '../utils/constants';
+import { fetchAllProducts, fetchAllCollections } from '../lib/shopify';
 import '../styles/pages/Shop.css';
 
 const Shop = () => {
@@ -10,6 +10,7 @@ const Shop = () => {
     const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'All');
     const [sortBy, setSortBy] = useState('featured');
     const [products, setProducts] = useState<Product[]>([]);
+    const [categories, setCategories] = useState<string[]>(['All']);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -24,10 +25,15 @@ const Shop = () => {
         setLoading(true);
         setError(null);
 
-        fetchAllProducts(50)
-            .then((shopifyProducts) => {
+        Promise.all([fetchAllProducts(50), fetchAllCollections()])
+            .then(([shopifyProducts, shopifyCollections]) => {
                 const mapped = shopifyProducts.map(shopifyToProduct);
                 setProducts(mapped);
+
+                // Build category list from Shopify collections (prepend "All")
+                const collectionTitles = shopifyCollections.map(c => c.title);
+                setCategories(['All', ...collectionTitles]);
+
                 setLoading(false);
             })
             .catch((err) => {
@@ -47,9 +53,12 @@ const Shop = () => {
         setSearchParams(searchParams);
     };
 
+    // Filter by checking if the product belongs to the selected collection
     const filteredProducts = selectedCategory === 'All'
         ? products
-        : products.filter(p => p.category === selectedCategory);
+        : products.filter(p =>
+            p.collections?.some(c => c === selectedCategory)
+        );
 
     const sortedProducts = [...filteredProducts].sort((a, b) => {
         if (sortBy === 'price-low') return a.price - b.price;
@@ -108,7 +117,7 @@ const Shop = () => {
                 <div className="container">
                     <div className="shop-controls">
                         <div className="category-filters">
-                            {CATEGORIES.map(category => (
+                            {categories.map(category => (
                                 <button
                                     key={category}
                                     className={`category-btn ${selectedCategory === category ? 'active' : ''}`}

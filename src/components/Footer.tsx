@@ -71,7 +71,7 @@ const Footer = () => {
                         <div className="card-icon">MC</div>
                         <div className="card-icon">UPI</div>
                     </div>
-                    <p>&copy; 2024 AllCloths. All rights reserved.</p>
+                    <p>&copy; 2026 AllCloths. All rights reserved.</p>
                 </div>
             </div>
         </footer>

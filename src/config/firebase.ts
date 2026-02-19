@@ -4,13 +4,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDBLkhVPLTjG6eNM1uIKhAL-RnmQO1D758",
-    authDomain: "mango-tree-tech.firebaseapp.com",
-    projectId: "mango-tree-tech",
-    storageBucket: "mango-tree-tech.firebasestorage.app",
-    messagingSenderId: "1050056302533",
-    appId: "1:1050056302533:web:a072a14c0116138cf2b5ac",
-    measurementId: "G-DBPW1ZZNB6"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase

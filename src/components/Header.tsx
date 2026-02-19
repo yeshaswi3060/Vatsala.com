@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
 import '../styles/components/Header.css';
 
 const Header = () => {
     const { itemCount } = useCart();
+    const { isAdmin, user } = useAuth();
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
     const [isScrolled, setIsScrolled] = useState(false);
@@ -77,7 +79,7 @@ const Header = () => {
                     </div>
 
                     <div className="header-actions">
-                        <Link to="/login" className="action-item desktop-only">
+                        <Link to={user ? "/profile" : "/login"} className="action-item desktop-only">
                             <div className="icon-wrapper">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -85,8 +87,8 @@ const Header = () => {
                                 </svg>
                             </div>
                             <div className="action-text">
-                                <span className="label">Account</span>
-                                <span className="sub-label">Login</span>
+                                <span className="label">{user ? 'My Account' : 'Account'}</span>
+                                <span className="sub-label">{user ? user.name?.split(' ')[0] : 'Login'}</span>
                             </div>
                         </Link>
 
@@ -145,6 +147,7 @@ const Header = () => {
                         <Link to="/shop?category=Suits">SUITS</Link>
                         <Link to="/shop?category=Kurtis">KURTIS</Link>
                         <Link to="/about">ABOUT US</Link>
+                        {isAdmin && <Link to="/admin" className="admin-link">DASHBOARD</Link>}
                     </nav>
                 </div>
             </div>
@@ -158,6 +161,7 @@ const Header = () => {
                     <Link to="/shop?category=Lehengas" onClick={() => setIsMobileMenuOpen(false)}>LEHENGAS</Link>
                     <Link to="/shop?category=Suits" onClick={() => setIsMobileMenuOpen(false)}>SUITS</Link>
                     <Link to="/wishlist" onClick={() => setIsMobileMenuOpen(false)}>WISHLIST</Link>
+                    {isAdmin && <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)} className="admin-link">DASHBOARD</Link>}
                     <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>LOGIN / REGISTER</Link>
                 </nav>
             </div>

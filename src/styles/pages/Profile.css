@@ -27,6 +27,27 @@
 .profile-header p {
     color: var(--color-text-muted);
     font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-logout {
+    background: transparent;
+    border: 1px solid rgba(255, 100, 100, 0.3);
+    color: #ff6b6b;
+    padding: 0.6rem 1.5rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 100, 100, 0.1);
+    border-color: #ff6b6b;
+    transform: translateY(-2px);
 }
 
 /* Profile Content */
