@@ -4,25 +4,17 @@
 // to avoid exposing the Admin Token to the browser. 
 // For this local/demo setup, we use standard fetch with env variables.
 
-const ADMIN_ACCESS_TOKEN = import.meta.env.VITE_SHOPIFY_ADMIN_ACCESS_TOKEN;
-// SHOP_DOMAIN removed as it was unused and causing lint errors
-const ADMIN_API_VERSION = '2024-01';
-
-// Use local proxy path to avoid CORS issues
-// The proxy in vite.config.ts maps '/api/shopify/admin' -> 'https://{shop}/admin/api'
-const ADMIN_URL = `/api/shopify/admin/${ADMIN_API_VERSION}/graphql.json`;
+// ADMIN_URL and ADMIN_ACCESS_TOKEN removed as they are no longer used.
 
 async function shopifyAdminFetch<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
-    if (!ADMIN_ACCESS_TOKEN) {
-        console.warn('Shopify Admin Token is missing. Please add VITE_SHOPIFY_ADMIN_ACCESS_TOKEN to .env');
-        throw new Error('Missing Admin Token');
-    }
+    // Use Vercel Serverless Function
+    // Vercel automatically routes /api requests to the api/ directory
+    const FUNCTION_URL = '/api/shopify';
 
-    const response = await fetch(ADMIN_URL, {
+    const response = await fetch(FUNCTION_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-Shopify-Access-Token': ADMIN_ACCESS_TOKEN,
         },
         body: JSON.stringify({ query, variables }),
     });
