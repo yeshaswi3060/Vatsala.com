@@ -1,10 +1,56 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
+import { createCheckout } from '../lib/shopify';
 import { formatPrice } from '../utils/constants';
 import '../styles/pages/Cart.css';
 
 const Cart = () => {
     const { items, itemCount, total, removeFromCart, updateQuantity } = useCart();
+    const { user } = useAuth();
+    const { showToast } = useToast();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
+    const handleShopifyCheckout = async () => {
+        if (!user) {
+            showToast('Please login to place an order', 'error');
+            navigate('/login');
+            return;
+        }
+
+        if (items.length === 0) {
+            showToast('Your cart is empty', 'warning');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            // Map cart items to Shopify line items
+            // We need variantId for Shopify checkout
+            const lineItems = items.map(item => {
+                if (!item.variantId) {
+                    throw new Error(`Product ${item.product.name} is missing variant ID`);
+                }
+                return {
+                    variantId: item.variantId,
+                    quantity: item.quantity
+                };
+            });
+
+            console.log('Creating checkout with items:', lineItems);
+            const checkoutUrl = await createCheckout(lineItems);
+
+            // Redirect to Shopify Checkout
+            window.location.href = checkoutUrl;
+        } catch (error) {
+            console.error('Checkout error:', error);
+            showToast('Failed to start checkout. Please try again.', 'error');
+            setLoading(false);
+        }
+    };
 
     if (itemCount === 0) {
         return (
@@ -98,9 +144,14 @@ const Cart = () => {
                             <span>{formatPrice(total)}</span>
                         </div>
 
-                        <Link to="/checkout" className="btn btn-primary btn-large">
-                            Proceed to Checkout
-                        </Link>
+                        <button
+                            onClick={handleShopifyCheckout}
+                            disabled={loading}
+                            className="btn btn-primary btn-large"
+                            style={{ width: '100%' }}
+                        >
+                            {loading ? 'Redirecting to Secure Checkout...' : 'Proceed to Checkout'}
+                        </button>
 
                         <Link to="/shop" className="continue-shopping">
                             Continue Shopping

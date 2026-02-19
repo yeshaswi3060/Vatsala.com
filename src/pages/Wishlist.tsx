@@ -51,19 +51,28 @@ const Wishlist = () => {
                     <div className="wishlist-grid">
                         {wishlist.map(product => (
                             <div key={product.id} className="wishlist-item">
-                                <Link to={`/product/${product.id}`} className="wishlist-item-image">
-                                    <div
-                                        className="product-image-placeholder"
-                                        style={{
-                                            background: getGradientForCategory(product.category)
-                                        }}
-                                    >
-                                        <span className="category-label">{product.category}</span>
-                                    </div>
+                                <Link to={`/product/${product.handle}`} className="wishlist-item-image">
+                                    {product.image ? (
+                                        <img
+                                            src={product.image}
+                                            alt={product.name}
+                                            className="product-image"
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                    ) : (
+                                        <div
+                                            className="product-image-placeholder"
+                                            style={{
+                                                background: getGradientForCategory(product.category)
+                                            }}
+                                        >
+                                            <span className="category-label">{product.category}</span>
+                                        </div>
+                                    )}
                                 </Link>
 
                                 <div className="wishlist-item-info">
-                                    <Link to={`/product/${product.id}`}>
+                                    <Link to={`/product/${product.handle}`}>
                                         <h3 className="wishlist-item-name">{product.name}</h3>
                                     </Link>
                                     <p className="wishlist-item-category">{product.category}</p>
