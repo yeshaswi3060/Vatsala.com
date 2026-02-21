@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProductRow from '../components/ProductRow';
 import ProductCard from '../components/ProductCard';
@@ -21,10 +22,19 @@ const Home = () => {
     // We need to map them.
     const featuredProducts = products.slice(0, 5).map(p => shopifyToProduct(p));
 
+    const [cms, setCms] = useState<any>(null);
+
+    useEffect(() => {
+        fetch('/api/settings')
+            .then(res => res.json())
+            .then(data => setCms(data))
+            .catch(console.error);
+    }, []);
+
     return (
         <div className="home-page">
             {/* Hero Grid Section (Replaces Marquee + Old Hero) */}
-            <HeroGrid />
+            <HeroGrid data={cms} />
 
             {/* Category Rail (Quick Links) */}
             <CategoryRail />
@@ -43,33 +53,33 @@ const Home = () => {
                     <div className="collections-grid">
                         <Link to="/shop?category=Sarees" className="collection-card">
                             <div className="collection-image">
-                                <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&auto=format&fit=crop&q=80" alt="Silk Sarees" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={cms?.categories?.sarees?.imageUrl || "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&auto=format&fit=crop&q=80"} alt="Silk Sarees" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </div>
                             <div className="collection-overlay">
                                 <h3 className="collection-name">Silk Sarees</h3>
-                                <p className="collection-description">Handwoven masterpieces typically for weddings and festivals.</p>
+                                <p className="collection-description">{cms?.categories?.sarees?.description || 'Handwoven masterpieces typically for weddings and festivals.'}</p>
                                 <span className="collection-link">Explore Collection &rarr;</span>
                             </div>
                         </Link>
 
                         <Link to="/shop?category=Lehengas" className="collection-card">
                             <div className="collection-image">
-                                <img src="https://images.unsplash.com/photo-1594951676644-2453e00787cb?w=600&auto=format&fit=crop&q=80" alt="Bridal Lehengas" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={cms?.categories?.lehengas?.imageUrl || "https://images.unsplash.com/photo-1594951676644-2453e00787cb?w=600&auto=format&fit=crop&q=80"} alt="Bridal Lehengas" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </div>
                             <div className="collection-overlay">
                                 <h3 className="collection-name">Bridal Lehengas</h3>
-                                <p className="collection-description">Intricate embroidery and royal silhouettes for your big day.</p>
+                                <p className="collection-description">{cms?.categories?.lehengas?.description || 'Intricate embroidery and royal silhouettes for your big day.'}</p>
                                 <span className="collection-link">Explore Collection &rarr;</span>
                             </div>
                         </Link>
 
                         <Link to="/shop?category=Suits" className="collection-card">
                             <div className="collection-image">
-                                <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=600&auto=format&fit=crop&q=80" alt="Designer Suits" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={cms?.categories?.suits?.imageUrl || "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=600&auto=format&fit=crop&q=80"} alt="Designer Suits" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </div>
                             <div className="collection-overlay">
                                 <h3 className="collection-name">Designer Suits</h3>
-                                <p className="collection-description">Contemporary styles meeting traditional comfort.</p>
+                                <p className="collection-description">{cms?.categories?.suits?.description || 'Contemporary styles meeting traditional comfort.'}</p>
                                 <span className="collection-link">Explore Collection &rarr;</span>
                             </div>
                         </Link>

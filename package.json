@@ -10,8 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.19.0",
     "@shopify/hydrogen-react": "^2026.1.0",
+    "dotenv": "^17.3.1",
     "firebase": "^12.6.0",
+    "formidable": "^3.5.4",
+    "mongodb": "^7.1.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.6",

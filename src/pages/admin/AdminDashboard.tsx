@@ -95,7 +95,7 @@ const AdminDashboard = () => {
             <div className="stats-grid">
                 <div className="stat-card">
                     <div className="stat-header">
-                        <div className="stat-icon icon-blue">
+                        <div className="stat-icon icon-gold">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
                         </div>
                         <span className="stat-trend trend-up">+12.5%</span>
@@ -108,7 +108,7 @@ const AdminDashboard = () => {
 
                 <div className="stat-card">
                     <div className="stat-header">
-                        <div className="stat-icon icon-purple">
+                        <div className="stat-icon icon-slate">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                         </div>
                         <span className="stat-trend trend-up">+8.2%</span>
@@ -121,7 +121,7 @@ const AdminDashboard = () => {
 
                 <div className="stat-card">
                     <div className="stat-header">
-                        <div className="stat-icon icon-orange">
+                        <div className="stat-icon icon-gold">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         </div>
                         <span className="stat-trend trend-up">+5.4%</span>
@@ -134,7 +134,7 @@ const AdminDashboard = () => {
 
                 <div className="stat-card">
                     <div className="stat-header">
-                        <div className="stat-icon icon-green">
+                        <div className="stat-icon icon-slate">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                         </div>
                         <span className="stat-trend trend-down">-2.1%</span>
@@ -158,18 +158,18 @@ const AdminDashboard = () => {
                             <AreaChart data={chartData}>
                                 <defs>
                                     <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1} />
-                                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                        <stop offset="5%" stopColor="#d4af37" stopOpacity={0.1} />
+                                        <stop offset="95%" stopColor="#d4af37" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9ca3af' }} dy={10} />
                                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9ca3af' }} tickFormatter={(value) => `₹${value}`} />
                                 <Tooltip
                                     contentStyle={{ background: '#fff', border: 'none', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                                     formatter={(value: any) => [`$${value}`, 'Sales']}
                                 />
-                                <Area type="monotone" dataKey="sales" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorSales)" />
+                                <Area type="monotone" dataKey="sales" stroke="#d4af37" strokeWidth={3} fillOpacity={1} fill="url(#colorSales)" />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>

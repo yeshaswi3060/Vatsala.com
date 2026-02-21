@@ -2,7 +2,17 @@ import { Link } from 'react-router-dom';
 import '../styles/components/HeroGrid.css';
 import TrustBadges from './TrustBadges';
 
-const HeroGrid = () => {
+interface HeroGridProps {
+    data?: any;
+}
+
+const HeroGrid = ({ data }: HeroGridProps) => {
+    const heroContent = data?.hero || {
+        imageUrl: 'https://images.unsplash.com/photo-1595341888016-a392ef81b7de?auto=format&fit=crop&q=80&w=1200',
+        title: 'Wedding Collection 2024',
+        subtitle: 'Handcrafted Elegance for Your Special Day'
+    };
+
     return (
         <section className="hero-grid-section">
             <div className="container">
@@ -11,13 +21,13 @@ const HeroGrid = () => {
                     <div className="hero-main-banner">
                         <div className="overlay"></div>
                         <img
-                            src="https://images.unsplash.com/photo-1595341888016-a392ef81b7de?auto=format&fit=crop&q=80&w=1200"
+                            src={heroContent.imageUrl}
                             alt="Main Offer"
                             className="banner-img"
                         />
                         <div className="banner-content">
-                            <h2 className="animate-slide-in-left">Wedding Collection 2024</h2>
-                            <p className="animate-fade-in-up">Handcrafted Elegance for Your Special Day</p>
+                            <h2 className="animate-slide-in-left">{heroContent.title}</h2>
+                            <p className="animate-fade-in-up">{heroContent.subtitle}</p>
                             <Link to="/shop" className="btn btn-primary animate-scale-in">Shop Now</Link>
                         </div>
                     </div>
@@ -33,15 +43,15 @@ const HeroGrid = () => {
                         {/* Bottom Side Banner */}
                         <div className="side-banner">
                             <img
-                                src="https://images.unsplash.com/photo-1595341888016-a392ef81b7de?w=600&auto=format&fit=crop&q=80"
-                                alt="Designer Lehengas"
+                                src={data?.side_banner?.imageUrl || "https://images.unsplash.com/photo-1595341888016-a392ef81b7de?w=600&auto=format&fit=crop&q=80"}
+                                alt={data?.side_banner?.title || "Designer Lehengas"}
                                 className="banner-img"
                             />
                             <div className="side-content">
-                                <h3>Designer Lehengas</h3>
-                                <span>New Arrivals</span>
+                                <h3>{data?.side_banner?.title || "Designer Lehengas"}</h3>
+                                <span>{data?.side_banner?.subtitle || "New Arrivals"}</span>
                             </div>
-                            <Link to="/shop?category=Lehengas" className="cover-link"></Link>
+                            <Link to={data?.side_banner?.linkUrl || "/shop?category=Lehengas"} className="cover-link"></Link>
                         </div>
                     </div>
                 </div>

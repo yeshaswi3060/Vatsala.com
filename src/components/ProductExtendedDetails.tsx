@@ -70,7 +70,6 @@ const ProductExtendedDetails: React.FC<ProductExtendedDetailsProps> = ({ product
                             <div className="feature-block-grid">
                                 <div className="feature-content">
                                     <h2 className="feature-title">Unrivaled Quality & Craftsmanship</h2>
-                                    <div className="feature-desc" dangerouslySetInnerHTML={{ __html: product.descriptionHtml || product.description }} />
 
                                     <ul className="feature-list">
                                         {features.map((feat, i) => (
