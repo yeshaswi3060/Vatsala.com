@@ -49,6 +49,7 @@ const AdminSettings = () => {
     const [message, setMessage] = useState({ text: '', type: '' });
     const [uploadingImage, setUploadingImage] = useState<string | null>(null); // path key of uploading image
     const [uploadProgress, setUploadProgress] = useState<number>(0);
+    const [imageWarning, setImageWarning] = useState<{ path: string, text: string } | null>(null);
 
     useEffect(() => {
         loadSettings();
@@ -78,9 +79,32 @@ const AdminSettings = () => {
         setSaving(false);
     };
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, objectPath: string, setterFn: (url: string) => void) => {
+    const handleImageUpload = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        objectPath: string,
+        setterFn: (url: string) => void,
+        recommendedW: number,
+        recommendedH: number
+    ) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        // Clear previous warnings for this specific input
+        if (imageWarning?.path === objectPath) setImageWarning(null);
+
+        // Validate image dimensions locally before uploading
+        const objectUrl = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+            URL.revokeObjectURL(objectUrl);
+            if (img.width !== recommendedW || img.height !== recommendedH) {
+                setImageWarning({
+                    path: objectPath,
+                    text: `⚠️ Warning: Uploaded image is ${img.width}x${img.height}px. For optimal layout, the exact recommended size is ${recommendedW}x${recommendedH}px.`
+                });
+            }
+        };
+        img.src = objectUrl;
 
         setUploadingImage(objectPath);
         setMessage({ text: '', type: '' });
@@ -172,13 +196,14 @@ const AdminSettings = () => {
                         </div>
                     </div>
                     <div className="form-group">
-                        <label>Upload Hero Image</label>
+                        <label>Upload Hero Image <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 400 }}>(Recommended: 1440x900 px)</span></label>
                         <input
                             type="file"
                             accept="image/*"
                             className="form-control file-input"
-                            onChange={(e) => handleImageUpload(e, 'hero', (url) => setSettings({ ...settings, hero: { ...settings.hero, imageUrl: url } }))}
+                            onChange={(e) => handleImageUpload(e, 'hero', (url) => setSettings({ ...settings, hero: { ...settings.hero, imageUrl: url } }), 1440, 900)}
                         />
+                        {imageWarning?.path === 'hero' && <p style={{ color: '#d9534f', fontSize: '0.9rem', margin: '5px 0' }}>{imageWarning.text}</p>}
                         {uploadingImage === 'hero' && <ProgressBar progress={uploadProgress} />}
                         {settings.hero.imageUrl && (
                             <img src={settings.hero.imageUrl} alt="Hero Preview" className="img-preview" />
@@ -224,13 +249,14 @@ const AdminSettings = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Upload Side Banner Image</label>
+                        <label>Upload Side Banner Image <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 400 }}>(Recommended: 800x1000 px)</span></label>
                         <input
                             type="file"
                             accept="image/*"
                             className="form-control file-input"
-                            onChange={(e) => handleImageUpload(e, 'side_banner', (url) => setSettings({ ...settings, side_banner: { ...settings.side_banner, imageUrl: url } }))}
+                            onChange={(e) => handleImageUpload(e, 'side_banner', (url) => setSettings({ ...settings, side_banner: { ...settings.side_banner, imageUrl: url } }), 800, 1000)}
                         />
+                        {imageWarning?.path === 'side_banner' && <p style={{ color: '#d9534f', fontSize: '0.9rem', margin: '5px 0' }}>{imageWarning.text}</p>}
                         {uploadingImage === 'side_banner' && <ProgressBar progress={uploadProgress} />}
                         {settings.side_banner?.imageUrl && (
                             <img src={settings.side_banner.imageUrl} alt="Side Banner Preview" className="img-preview" />
@@ -262,13 +288,14 @@ const AdminSettings = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Upload Saree Category Image</label>
+                                <label>Upload Saree Category Image <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 400 }}>(Recommended: 800x1200 px)</span></label>
                                 <input
                                     type="file"
                                     accept="image/*"
                                     className="form-control file-input"
-                                    onChange={(e) => handleImageUpload(e, 'saree', (url) => setSettings({ ...settings, categories: { ...settings.categories, sarees: { ...settings.categories.sarees, imageUrl: url } } }))}
+                                    onChange={(e) => handleImageUpload(e, 'saree', (url) => setSettings({ ...settings, categories: { ...settings.categories, sarees: { ...settings.categories.sarees, imageUrl: url } } }), 800, 1200)}
                                 />
+                                {imageWarning?.path === 'saree' && <p style={{ color: '#d9534f', fontSize: '0.9rem', margin: '5px 0' }}>{imageWarning.text}</p>}
                                 {uploadingImage === 'saree' && <ProgressBar progress={uploadProgress} />}
                                 {settings.categories.sarees.imageUrl && (
                                     <img src={settings.categories.sarees.imageUrl} alt="Preview" className="img-preview sm-preview" />
@@ -295,13 +322,14 @@ const AdminSettings = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Upload Lehenga Category Image</label>
+                                <label>Upload Lehenga Category Image <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 400 }}>(Recommended: 800x1200 px)</span></label>
                                 <input
                                     type="file"
                                     accept="image/*"
                                     className="form-control file-input"
-                                    onChange={(e) => handleImageUpload(e, 'lehenga', (url) => setSettings({ ...settings, categories: { ...settings.categories, lehengas: { ...settings.categories.lehengas, imageUrl: url } } }))}
+                                    onChange={(e) => handleImageUpload(e, 'lehenga', (url) => setSettings({ ...settings, categories: { ...settings.categories, lehengas: { ...settings.categories.lehengas, imageUrl: url } } }), 800, 1200)}
                                 />
+                                {imageWarning?.path === 'lehenga' && <p style={{ color: '#d9534f', fontSize: '0.9rem', margin: '5px 0' }}>{imageWarning.text}</p>}
                                 {uploadingImage === 'lehenga' && <ProgressBar progress={uploadProgress} />}
                                 {settings.categories.lehengas.imageUrl && (
                                     <img src={settings.categories.lehengas.imageUrl} alt="Preview" className="img-preview sm-preview" />
@@ -328,13 +356,14 @@ const AdminSettings = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Upload Suits Category Image</label>
+                                <label>Upload Suits Category Image <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 400 }}>(Recommended: 800x1200 px)</span></label>
                                 <input
                                     type="file"
                                     accept="image/*"
                                     className="form-control file-input"
-                                    onChange={(e) => handleImageUpload(e, 'suit', (url) => setSettings({ ...settings, categories: { ...settings.categories, suits: { ...settings.categories.suits, imageUrl: url } } }))}
+                                    onChange={(e) => handleImageUpload(e, 'suit', (url) => setSettings({ ...settings, categories: { ...settings.categories, suits: { ...settings.categories.suits, imageUrl: url } } }), 800, 1200)}
                                 />
+                                {imageWarning?.path === 'suit' && <p style={{ color: '#d9534f', fontSize: '0.9rem', margin: '5px 0' }}>{imageWarning.text}</p>}
                                 {uploadingImage === 'suit' && <ProgressBar progress={uploadProgress} />}
                                 {settings.categories.suits.imageUrl && (
                                     <img src={settings.categories.suits.imageUrl} alt="Preview" className="img-preview sm-preview" />
@@ -381,7 +410,7 @@ const AdminSettings = () => {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label>Upload Rail Image</label>
+                                    <label>Upload Rail Image <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 400 }}>(Recommended: 400x400 px)</span></label>
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -390,8 +419,9 @@ const AdminSettings = () => {
                                             const newRail = [...settings.category_rail];
                                             newRail[index].imageUrl = url;
                                             setSettings({ ...settings, category_rail: newRail });
-                                        })}
+                                        }, 400, 400)}
                                     />
+                                    {imageWarning?.path === `rail_${index}` && <p style={{ color: '#d9534f', fontSize: '0.9rem', margin: '5px 0' }}>{imageWarning.text}</p>}
                                     {uploadingImage === `rail_${index}` && <ProgressBar progress={uploadProgress} />}
                                     {railItem.imageUrl && (
                                         <img src={railItem.imageUrl} alt="Preview" className="img-preview sm-preview" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
