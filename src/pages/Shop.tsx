@@ -25,7 +25,10 @@ const Shop = () => {
         setLoading(true);
         setError(null);
 
-        Promise.all([fetchAllProducts(50), fetchAllCollections()])
+        Promise.all([
+            fetchAllProducts(250), // Fetch a large default pool
+            fetchAllCollections()
+        ])
             .then(([shopifyProducts, shopifyCollections]) => {
                 const mapped = shopifyProducts.map(shopifyToProduct);
                 setProducts(mapped);
@@ -53,10 +56,13 @@ const Shop = () => {
         setSearchParams(searchParams);
     };
 
+    // Base visible products (can be filtered further later if needed)
+    let visibleProducts = products;
+
     // Filter by checking if the product belongs to the selected collection
     const filteredProducts = selectedCategory === 'All'
-        ? products
-        : products.filter(p =>
+        ? visibleProducts
+        : visibleProducts.filter(p =>
             p.collections?.some(c => c === selectedCategory)
         );
 
@@ -67,13 +73,14 @@ const Shop = () => {
         return 0; // featured
     });
 
+    const paginatedProducts = sortedProducts;
+
     if (loading) {
         return (
             <div className="shop-page">
                 <div className="shop-hero">
                     <div className="container">
                         <h1>Shop Traditional Wear</h1>
-                        <p>Discover our complete collection of authentic Indian clothing</p>
                     </div>
                 </div>
                 <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
@@ -89,7 +96,6 @@ const Shop = () => {
                 <div className="shop-hero">
                     <div className="container">
                         <h1>Shop Traditional Wear</h1>
-                        <p>Discover our complete collection of authentic Indian clothing</p>
                     </div>
                 </div>
                 <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>
@@ -149,12 +155,12 @@ const Shop = () => {
                     </div>
 
                     <div className="products-grid">
-                        {sortedProducts.map(product => (
+                        {paginatedProducts.map(product => (
                             <ProductCard key={product.id} product={product} />
                         ))}
                     </div>
 
-                    {sortedProducts.length === 0 && (
+                    {paginatedProducts.length === 0 && (
                         <div className="no-products">
                             <p>No products found in this category.</p>
                         </div>

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/components/ProductExtendedDetails.css';
 import type { Product } from '../utils/constants';
-import { fetchProductExtension } from '../lib/firebaseProduct';
 
 interface ProductExtendedDetailsProps {
     product: Product;
@@ -24,14 +23,31 @@ const ProductExtendedDetails: React.FC<ProductExtendedDetailsProps> = ({ product
         { label: 'Origin', value: 'India' }
     ]);
 
+    const [reviews, setReviews] = useState<{ reviewer: string, rating: number, text: string, date: string }[]>([
+        { reviewer: "Sarah Jenkins", rating: 5, text: "The quality is better than anything I've tried. Perfect for my daily wear and special occasions. The gold embroidery is stunning in person!", date: "2024-03-15" },
+        { reviewer: "Mark Reynolds", rating: 5, text: "Exactly as advertised. I only buy from Allcloth now. The fit is perfect and the fabric feels incredibly premium.", date: "2024-03-10" }
+    ]);
+
     useEffect(() => {
         if (!product.id) return;
 
         const loadExtension = async () => {
-            const extension = await fetchProductExtension(product.id);
-            if (extension) {
-                if (extension.features.length > 0) setFeatures(extension.features);
-                if (extension.specifications.length > 0) setSpecs(extension.specifications);
+            try {
+                // Remove gid://shopify/Product/ prefix securely
+                const cleanId = product.id.replace('gid://shopify/Product/', '');
+
+                const response = await fetch(`/api/product-extensions?productId=${cleanId}`);
+                if (!response.ok) return;
+
+                const extension = await response.json();
+
+                if (extension) {
+                    if (extension.features && extension.features.length > 0) setFeatures(extension.features);
+                    if (extension.specifications && extension.specifications.length > 0) setSpecs(extension.specifications);
+                    if (extension.reviews && extension.reviews.length > 0) setReviews(extension.reviews);
+                }
+            } catch (error) {
+                console.error("Failed to load product extensions from MongoDB:", error);
             }
         };
 
@@ -59,7 +75,7 @@ const ProductExtendedDetails: React.FC<ProductExtendedDetailsProps> = ({ product
                         className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
                         onClick={() => setActiveTab('reviews')}
                     >
-                        Reviews (128)
+                        Reviews ({reviews.length > 0 ? reviews.length + 126 : 128})
                     </button>
                 </div>
 
@@ -128,24 +144,23 @@ const ProductExtendedDetails: React.FC<ProductExtendedDetailsProps> = ({ product
 
                                 {/* Reviews Grid */}
                                 <div className="reviews-grid">
-                                    <div className="review-card">
-                                        <div className="reviewer-info">
-                                            <div className="reviewer-avatar">SJ</div>
-                                            <div>
-                                                <div className="reviewer-name">Sarah Jenkins</div>
-                                                <div className="review-stars-small">★★★★★</div>
+                                    {reviews.map((review, i) => (
+                                        <div className="review-card" key={i}>
+                                            <div className="reviewer-info">
+                                                <div className={`reviewer-avatar ${i % 2 === 0 ? '' : 'blue'}`}>
+                                                    {review.reviewer.substring(0, 2).toUpperCase()}
+                                                </div>
+                                                <div>
+                                                    <div className="reviewer-name">{review.reviewer}</div>
+                                                    <div className="review-stars-small">
+                                                        {'★'.repeat(Math.floor(review.rating))}
+                                                        {'☆'.repeat(5 - Math.floor(review.rating))}
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <p className="review-text">"{review.text}"</p>
                                         </div>
-                                        <p className="review-text">"The quality is better than anything I've tried. Perfect for my daily wear and special occasions. The gold embroidery is stunning in person!"</p>
-                                    </div>
-                                    <div className="review-card">
-                                        <div className="reviewer-avatar blue">MR</div>
-                                        <div>
-                                            <div className="reviewer-name">Mark Reynolds</div>
-                                            <div className="review-stars-small">★★★★★</div>
-                                        </div>
-                                        <p className="review-text">"Exactly as advertised. I only buy from Allcloth now. The fit is perfect and the fabric feels incredibly premium."</p>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>

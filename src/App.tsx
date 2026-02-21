@@ -31,6 +31,7 @@ import AdminProductEdit from './pages/admin/AdminProductEdit';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminPromoCodes from './pages/admin/AdminPromoCodes';
 import AdminSettings from './pages/admin/AdminSettings';
+import AdminProductSettings from './pages/admin/AdminProductSettings';
 
 const PublicLayout = () => (
   <>
@@ -106,6 +107,7 @@ const AppContent = () => {
                     <Route path="/admin/users" element={<AdminUsers />} />
                     <Route path="/admin/promocodes" element={<AdminPromoCodes />} />
                     <Route path="/admin/settings" element={<AdminSettings />} />
+                    <Route path="/admin/product-settings" element={<AdminProductSettings />} />
                   </Route>
                 </Route>
               </Routes>
